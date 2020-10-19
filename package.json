@@ -1,0 +1,24 @@
+{
+  "name": "api-gestion-productos",
+  "version": "1.0.0",
+  "description": "Subsistema 2, ingeneria de software",
+  "main": "index.js",
+  "scripts": {
+    "serve": "nodemon src/index.js",
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "test": "mocha tests --exit"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.2",
+    "express": "^4.17.1",
+    "pg": "^8.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.5",
+    "supertest": "^5.0.0",
+    "mocha": "^8.2.0",
+    "morgan": "^1.10.0"
+  },
+  "keywords": [],
+  "license": "ISC"
+}
