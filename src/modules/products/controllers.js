@@ -30,9 +30,9 @@ async function SHOW (req, res) {
 
 async function POST (req, res) {
     try {
-        const { name, price } = req.body
-        if(!(name && price)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await createProduct(name, price)
+        const { name, price, description } = req.body
+        if(!(name && price && description)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await createProduct(name, price, description)
 
         return res.status(201).json('Created product')
     } catch (error) {
@@ -43,8 +43,8 @@ async function POST (req, res) {
 async function PUT (req, res) {
     try {
         const id = req.params.id
-        const { name, price } = req.body
-        await updateProduct(id, name, price)
+        const { name, price, description } = req.body
+        await updateProduct(id, name, price, description)
 
         return res.status(200).json('Updated product')
     } catch (error) {
