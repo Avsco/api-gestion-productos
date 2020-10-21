@@ -1,4 +1,5 @@
 const express = require('express')
+var cors = require('cors')
 // const path = require('path')
 
 const port = process.env.PORT || 4000
@@ -10,6 +11,7 @@ const morgan = require('morgan')
 const init = async () => {
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
+    app.use(cors())
     
     if (process.env.NODE_ENV !== 'production')
         app.use(morgan('dev'))
