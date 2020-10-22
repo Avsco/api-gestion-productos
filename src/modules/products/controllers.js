@@ -18,8 +18,8 @@ async function GET(req, res) {
 
 async function SHOW (req, res) {
     try {
-        const id = req.params.id
-        const response = await getProductById(id)
+        const cod_prod = req.params.id
+        const response = await getProductById(cod_prod)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -30,9 +30,9 @@ async function SHOW (req, res) {
 
 async function POST (req, res) {
     try {
-        const { name, price, description } = req.body
-        if(!(name && price && description)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await createProduct(name, price, description)
+        const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
+        if(!(nombre_prod && descripcion && precio_unid && ((peso && unidad_med) || cantidad))) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await createProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
 
         return res.status(201).json('Created product')
     } catch (error) {
@@ -43,8 +43,8 @@ async function POST (req, res) {
 async function PUT (req, res) {
     try {
         const id = req.params.id
-        const { name, price, description } = req.body
-        await updateProduct(id, name, price, description)
+        const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
+        await updateProduct(id, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
 
         return res.status(200).json('Updated product')
     } catch (error) {

@@ -3,39 +3,40 @@ const pool = require('../../database')
 
 async function getProduct(){
     const response = await pool.query(
-        'SELECT * FROM products;'
+        'SELECT * FROM producto;'
     )
     return response.rows
 }
 
-async function getProductById(id){
+async function getProductById(cod_prod){
     const response = await pool.query(
-        'SELECT * FROM products WHERE id = $1',
-        [id]
+        'SELECT * FROM producto WHERE cod_prod = $1',
+        [cod_prod]
     )
     return response.rows
 }
 
-async function createProduct(name, price, description){
+async function createProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){
     const response =  await pool.query(
-        'INSERT INTO products (name, price, description) VALUES ($1, $2, $3);',
-        [name, price, description]
+        'INSERT INTO products (nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad) VALUES ($1, $2, $3, $4, $5 $6, $7);',
+        [nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
+    )
+    return response.command
+}
+// falta aumentar fecha_adic por GETDATE();
+
+async function updateProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){
+    const response = await pool.query(
+        'UPDATE products SET nombre_prod=$1, descripcion=$2, precio_unid=$3, peso=$4, unidad_med=$5, fecha_venc=$6, cantidad=$7;',
+        [nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
     )
     return response.command
 }
 
-async function updateProduct(id, name, price, description){
+async function deleteProduct(cod_prod){
     const response = await pool.query(
-        'UPDATE products SET name = $1, price = $2, description = $3 WHERE id = $4;',
-        [name, price, description, id]
-    )
-    return response.command
-}
-
-async function deleteProduct(id){
-    const response = await pool.query(
-        'DELETE FROM products WHERE id = $1;',
-        [id]
+        'DELETE FROM producto WHERE cod_prod = $1;',
+        [cod_prod]
     )
     return response.command
 }
