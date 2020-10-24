@@ -32,9 +32,9 @@ async function SHOW (req, res) {
 async function POST (req, res) {
     try {
         const { nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc } = req.body
-        if(!(nombre_prod && descripcion && precio_unid && categoria && ((peso && unidad_med) || cantidad))) return res.status(400).json({ msg: 'Complete todos los datos' })
+        if(!(nombre_prod && descripcion && precio_unid && categoria)) return res.status(400).json({ msg: 'Complete todos los datos' })
         const creaCat = await categoryManage(categoria)
-        await createProduct(nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc)
+        await createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc)
 
         return res.status(200).json('Created product')
     } catch (error) {
