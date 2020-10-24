@@ -1,6 +1,7 @@
 const {
     getProduct,
     getProductById,
+    categoryManage,
     createProduct,
     updateProduct,
     deleteProduct
@@ -30,11 +31,12 @@ async function SHOW (req, res) {
 
 async function POST (req, res) {
     try {
-        const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
-        if(!(nombre_prod && descripcion && precio_unid && ((peso && unidad_med) || cantidad))) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await createProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
+        const { nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc } = req.body
+        if(!(nombre_prod && descripcion && precio_unid && categoria && ((peso && unidad_med) || cantidad))) return res.status(400).json({ msg: 'Complete todos los datos' })
+        const creaCat = await categoryManage(categoria)
+        await createProduct(nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc)
 
-        return res.status(201).json('Created product')
+        return res.status(200).json('Created product')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }

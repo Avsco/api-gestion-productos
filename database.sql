@@ -182,3 +182,21 @@ values (5,'Zapatos NIKE','Zapatos NIKE color blanco con negro ',135,null,null,nu
 insert into producto(cod_cat,nombre_prod,descripcion,precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad)
 values (5,'Chamarra ADIDAS','Chamarra ADIDAS talla L',187,null,null,null,'2020-4-15',3);
 
+
+
+
+
+
+
+INSERT INTO categoria (cod_admin, nombre_cat) SELECT 1, $3 WHERE NOT EXISTS (SELECT nombre_cat FROM categoria WHERE nombre_cat = $3);
+INSERT INTO producto (cod_cat, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, fecha_adic, cantidad)
+SELECT c.cod_cat, $1, $2, $4, $7, $8, $9, CURRENT_DATE, $6
+FROM categoria c, producto p
+WHERE c.nombre_cat=$3 AND c.cod_cat=p.cod_cat;
+
+
+
+
+
+
+
