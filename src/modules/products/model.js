@@ -26,8 +26,16 @@ async function categoryManage(categoria){
 
 async function createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc){
     const response =  await pool.query(
-    'INSERT INTO producto (cod_cat, nombre_prod, descripcion, precio_unid, cantidad, peso, unidad_med, fecha_venc, fecha_adic) SELECT c.cod_cat, $1, $2, $4, $5, $6, $7, $8, CURRENT_DATE FROM categoria c, producto p WHERE c.nombre_cat=$3 AND c.cod_cat=p.cod_cat;',
-        [nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc]
+    /*'INSERT INTO producto (cod_cat, nombre_prod, descripcion, precio_unid, cantidad, peso, unidad_med, fecha_venc, fecha_adic) 
+    SELECT c.cod_cat, $1, $2, $4, $5, $6, $7, $8, CURRENT_DATE FROM categoria c, producto p WHERE 
+    c.nombre_cat=$3 AND c.cod_cat=p.cod_cat;',*/
+    `insert into producto (cod_cat, nombre_prod, descripcion, precio_unid, cantidad, peso, unidad_med, fecha_venc,fecha_adic)
+        values ((select cod_cat
+        from categoria
+        where nombre_cat=$3),$1,$2,$4,$5, $6, $7, $8,CURRENT_DATE); ` 
+
+    ,
+    [nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc]
     )
     return response.command
 }
