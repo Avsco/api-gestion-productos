@@ -9,7 +9,12 @@ const {
 
 async function GET(req, res) {
     try {
-        const response = await getProduct()
+
+        const criterio = req.query.criterio
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+
+        const response = await getProduct(criterio,page,limit)
 
         return res.status(200).json(response)
     } catch (error) {

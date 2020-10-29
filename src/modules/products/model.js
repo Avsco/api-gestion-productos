@@ -1,12 +1,50 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getProduct(){
-    const response = await pool.query(
-        /*cod_cat,cod_prod,nombre_prod,descripcion,precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad*/ 
-        'SELECT cod_cat,cod_prod,nombre_prod,descripcion,precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad FROM producto ;'
+async function getProduct(criterio,page,limit){
+
+    if(criterio == ''){
+        const response = await pool.query(
+            "SELECT * FROM producto ORDER BY cod_prod;"
+        )
+        var result1 = response.rows
+        
+    }else{
+        const response = await pool.query(
+            "SELECT * FROM producto ORDER BY "+criterio+";"
+        )
+        
+        var result1 = response.rows
+          
+    }
+    
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        "SELECT count(*) FROM producto;"
     )
-    return response.rows
+    
+    results.cant = ros.rows
+
+    return results
 }
 
 async function getProductById(cod_prod){
