@@ -3,7 +3,8 @@ const pool = require('../../database')
 
 async function getProduct(){
     const response = await pool.query(
-        'SELECT * FROM producto;'
+        /*cod_cat,cod_prod,nombre_prod,descripcion,precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad*/ 
+        'SELECT cod_cat,cod_prod,nombre_prod,descripcion,precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad FROM producto ;'
     )
     return response.rows
 }
