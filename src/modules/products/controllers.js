@@ -1,6 +1,7 @@
 const {
     getProduct,
     getProductById,
+    categoryManage,
     createProduct,
     updateProduct,
     deleteProduct
@@ -8,7 +9,12 @@ const {
 
 async function GET(req, res) {
     try {
-        const response = await getProduct()
+
+        const criterio = req.query.criterio
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+
+        const response = await getProduct(criterio,page,limit)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -18,8 +24,8 @@ async function GET(req, res) {
 
 async function SHOW (req, res) {
     try {
-        const id = req.params.id
-        const response = await getProductById(id)
+        const cod_prod = req.params.id
+        const response = await getProductById(cod_prod)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -30,11 +36,12 @@ async function SHOW (req, res) {
 
 async function POST (req, res) {
     try {
-        const { name, price, description } = req.body
-        if(!(name && price && description)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await createProduct(name, price, description)
+        const { nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc } = req.body
+        if(!(nombre_prod && descripcion && precio_unid && categoria)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        const creaCat = await categoryManage(categoria)
+        await createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc)
 
-        return res.status(201).json('Created product')
+        return res.status(200).json('Created product')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
@@ -43,8 +50,8 @@ async function POST (req, res) {
 async function PUT (req, res) {
     try {
         const id = req.params.id
-        const { name, price, description } = req.body
-        await updateProduct(id, name, price, description)
+        const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
+        await updateProduct(id, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
 
         return res.status(200).json('Updated product')
     } catch (error) {
