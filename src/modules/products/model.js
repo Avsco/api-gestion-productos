@@ -97,6 +97,13 @@ async function deleteProduct(cod_prod){
     return response.command
 }
 
+async function getImageById(id){
+    const response = await pool.query(
+        'SELECT I.imagen FROM imagen I WHERE I.cod_prod = $1 ORDER BY num_pic LIMIT 1',
+        [id]
+    )
+    return response.rows
+}
 
 module.exports = { 
     getProduct,
@@ -104,5 +111,6 @@ module.exports = {
     categoryManage,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getImageById
 }
