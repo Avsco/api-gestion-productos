@@ -48,6 +48,9 @@ async function getProduct(criterio,page,limit){
 }
 
 async function getProductById(cod_prod,cantidad){
+    /*En la query de la URL se pide que los datos sean mandado como /products/id/cantidad
+    la cantidad define el número de imágenes que se quiere, donde al colocar 1, trae solo 1, cualquier otro valor
+    trae todas las imagenes disponibles*/ 
     const dat = await pool.query(
         'SELECT * FROM producto WHERE cod_prod = $1',
         [cod_prod]
