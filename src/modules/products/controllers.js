@@ -26,6 +26,8 @@ async function GET(req, res) {
 async function SHOW (req, res) {
     try {
         const cod_prod = req.params.id
+        const cantidad = req.params.cantidad
+        console.log("la cantidad es "+req.params.cantidad)
         const response = await getProductById(cod_prod)
 
         return res.status(200).json(response)

@@ -47,12 +47,41 @@ async function getProduct(criterio,page,limit){
     return results
 }
 
-async function getProductById(cod_prod){
-    const response = await pool.query(
+async function getProductById(cod_prod,cantidad){
+    const dat = await pool.query(
         'SELECT * FROM producto WHERE cod_prod = $1',
         [cod_prod]
     )
-    return response.rows
+    response.datos=dat.rows
+
+    if (cantidad==1)
+    {
+
+        const response2 = await pool.query(
+            `select imagen 
+            from imagen
+            where cod_prod = $1
+            order by num_pic limit 1`,
+            [cod_prod]
+        )
+        response.imagenes=response2.rows
+
+    }else{
+
+        const response2 = await pool.query(
+            `
+            select imagen 
+            from imagen
+            where cod_prod = $1
+            order by num_pic`,
+            [cod_prod]
+        )
+        response.imagenes=response2.rows
+
+       
+    }
+
+    return response
 }
 
 async function categoryManage(categoria){
