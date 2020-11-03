@@ -82,7 +82,17 @@ async function GETIMAGE (req, res) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
 }
+/*async function SHOW (req, res) {
+    try {
+        const cod_prod = req.params.id
+        const response = await getProductById(cod_prod)
 
+        return res.status(200).json(response)
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}*/
 module.exports = {
     GET,
     SHOW,
