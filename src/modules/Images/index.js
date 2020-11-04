@@ -3,8 +3,8 @@ const router = Router()
 
 const { GET, SHOW, POST, PUT, DELETE, GETIMAGE } = require('./controllers')
 
-router.get('/products', GET)
-router.get('/products/:id', SHOW)
+router.get('/images', GET)
+router.get('/images/:id', SHOW)
 router.post('/products', POST)
 router.put('/products/:id', PUT)
 router.delete('/products/:id', DELETE)
