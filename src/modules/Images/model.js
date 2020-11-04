@@ -84,18 +84,18 @@ async function createImage(cod_prod,imagen){
     return response.command
 }
 
-async function updateProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){
+async function updateImage(cod_prod,num_pic,imagen){
     const response = await pool.query(
-        'UPDATE producto SET nombre_prod=$1, descripcion=$2, precio_unid=$3, peso=$4, unidad_med=$5, fecha_venc=$6, cantidad=$7;',
-        [nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
+        'UPDATE imagen  SET imagen=$3 where cod_prod = $1 and num_pic = $2;',
+        [cod_prod,num_pic,imagen ]
     )
     return response.command
 }
 
-async function deleteProduct(cod_prod){
+async function deleteImage(cod_prod,num_pic){
     const response = await pool.query(
-        'DELETE FROM producto WHERE cod_prod = $1;',
-        [cod_prod]
+        'DELETE FROM imagen WHERE cod_prod = $1 and num_pic = $2;',
+        [cod_prod,num_pic]
     )
     return response.command
 }
@@ -106,7 +106,7 @@ module.exports = {
     getImage,
     getImageById,
     createImage,
-    updateProduct,
-    deleteProduct,
+    updateImage,
+    deleteImage,
     
 }

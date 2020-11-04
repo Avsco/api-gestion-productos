@@ -2,8 +2,8 @@ const {
     getImage,
     getImageById,
     createImage,
-    updateProduct,
-    deleteProduct,
+    updateImage,
+    deleteImage,
 } = require('./model')
 
 async function GET(req, res) {
@@ -23,11 +23,10 @@ async function GET(req, res) {
 
 async function SHOW (req, res) {
     try {
-        console.log("Hola")
         const cod_prod = req.params.id
         const cantidad = req.query.cantidad
         console.log("la cantidad es "+ cantidad)
-        const response = await getImageById(cod_prod)
+        const response = await getImageById(cod_prod, cantidad)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -51,8 +50,9 @@ async function POST (req, res) {
 async function PUT (req, res) {
     try {
         const id = req.params.id
-        const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
-        await updateProduct(id, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
+        const {num_pic,imagen} = req.body
+        if(!(num_pic,imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await updateImage(id, num_pic, imagen)
 
         return res.status(200).json('Updated product')
     } catch (error) {
@@ -63,14 +63,15 @@ async function PUT (req, res) {
 async function DELETE (req, res) {
     try {
         const id = req.params.id
-        await deleteProduct(id)
+        const {num_pic}=req.body
+        if(!(num_pic)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await deleteImage(id,num_pic)
 
         return res.status(200).json('Deleted product')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
 }
-
 
 module.exports = {
     GET,
