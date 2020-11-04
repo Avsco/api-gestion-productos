@@ -5,8 +5,7 @@ const { GET, SHOW, POST, PUT, DELETE, GETIMAGE } = require('./controllers')
 
 router.get('/images', GET)
 router.get('/images/:id', SHOW)
-router.post('/products', POST)
-router.put('/products/:id', PUT)
-router.delete('/products/:id', DELETE)
-//router.get('/image', GETIMAGE)
+router.post('/images', POST)
+router.put('/images/:id', PUT)
+router.delete('/images/:id', DELETE)
 module.exports = router
