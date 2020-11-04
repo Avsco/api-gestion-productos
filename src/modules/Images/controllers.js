@@ -1,11 +1,9 @@
 const {
-    getProduct,
-    getProductById,
-    categoryManage,
-    createProduct,
+    getImage,
+    getImageById,
+    createImage,
     updateProduct,
     deleteProduct,
-    getImageById,
 } = require('./model')
 
 async function GET(req, res) {
@@ -15,7 +13,7 @@ async function GET(req, res) {
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
-        const response = await getProduct(criterio,page,limit)
+        const response = await getImage(criterio,page,limit)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -25,10 +23,11 @@ async function GET(req, res) {
 
 async function SHOW (req, res) {
     try {
+        console.log("Hola")
         const cod_prod = req.params.id
-        const cantidad = req.params.cantidad
-        console.log("la cantidad es "+req.params.cantidad)
-        const response = await getProductById(cod_prod)
+        const cantidad = req.query.cantidad
+        console.log("la cantidad es "+ cantidad)
+        const response = await getImageById(cod_prod)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -39,10 +38,9 @@ async function SHOW (req, res) {
 
 async function POST (req, res) {
     try {
-        const { nombre_prod, descripcion, categoria, precio_unid, unidad, cantidad, peso, unidad_med, fecha_venc } = req.body
-        if(!(nombre_prod && descripcion && precio_unid && categoria)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        const creaCat = await categoryManage(categoria)
-        await createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc)
+        const {cod_prod, imagen } = req.body
+        if(!(cod_prod && imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await createImage(cod_prod, imagen)
 
         return res.status(200).json('Created product')
     } catch (error) {
@@ -73,17 +71,6 @@ async function DELETE (req, res) {
     }
 }
 
-async function GETIMAGE (req, res) {
-    try {
-        const id = req.query.id
-        const response = await getImageById(id)
-       
-        return res.status(200).json(response)
-    } catch (error) {
-        console.error(error)
-        return res.status(500).json({ errorCode: error.code, msg: error.message })
-    }
-}
 
 module.exports = {
     GET,
@@ -91,5 +78,5 @@ module.exports = {
     POST,
     PUT,
     DELETE,
-    GETIMAGE
+ 
 }

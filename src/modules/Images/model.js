@@ -1,17 +1,17 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getProduct(criterio,page,limit){
+async function getImage(criterio,page,limit){
 
     if(criterio == ''){
         const response = await pool.query(
-            "SELECT * FROM producto ORDER BY cod_prod;"
+            "select * from imagen order by cod_prod;"
         )
         var result1 = response.rows
         
     }else{
         const response = await pool.query(
-            "SELECT * FROM producto ORDER BY "+criterio+";"
+            "SELECT * FROM imagen ORDER BY "+criterio+";"
         )
         
         var result1 = response.rows
@@ -39,7 +39,7 @@ async function getProduct(criterio,page,limit){
     }
 
     const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
+        "select count(*) from imagen;"
     )
     
     results.cant = ros.rows
@@ -47,39 +47,27 @@ async function getProduct(criterio,page,limit){
     return results
 }
 
-async function getProductById(cod_prod,cantidad){
-    /*En la query de la URL se pide que los datos sean mandado como /products/id/cantidad
-    la cantidad define el número de imágenes que se quiere, donde al colocar 1, trae solo 1, cualquier otro valor
-    trae todas las imagenes disponibles*/ 
-    const dat = await pool.query(
-        'SELECT * FROM producto WHERE cod_prod = $1',
-        [cod_prod]
-    )
-    response.datos=dat.rows
-
+async function getImageById(cod_prod,cantidad){
+    
     if (cantidad==1)
     {
-
         const response2 = await pool.query(
             `select imagen 
-            from imagen
-            where cod_prod = $1
+            from imagen where cod_prod = $1
             order by num_pic limit 1`,
             [cod_prod]
         )
-        response.imagenes=response2.rows
+        response.datos=response2.rows
 
     }else{
 
         const response2 = await pool.query(
-            `
-            select imagen 
-            from imagen
-            where cod_prod = $1
+            `select imagen 
+            from imagen where cod_prod = $1
             order by num_pic`,
             [cod_prod]
         )
-        response.imagenes=response2.rows
+        response.datos=response2.rows
 
        
     }
@@ -87,24 +75,11 @@ async function getProductById(cod_prod,cantidad){
     return response
 }
 
-async function categoryManage(categoria){
-    const response = await pool.query(
-        'INSERT INTO categoria (cod_admin, nombre_cat) SELECT 1, CAST($1 AS VARCHAR) WHERE NOT EXISTS (SELECT nombre_cat FROM categoria WHERE nombre_cat = $1);',
-        [categoria]
-    )
-    return response.command
-}
 
-async function createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc){
+async function createImage(cod_prod,imagen){
     const response =  await pool.query(
-    
-    `insert into producto (cod_cat, nombre_prod, descripcion, precio_unid, cantidad, peso, unidad_med, fecha_venc,fecha_adic)
-        values ((select cod_cat
-        from categoria
-        where nombre_cat=$3),$1,$2,$4,$5, $6, $7, $8,CURRENT_DATE); ` 
-
-    ,
-    [nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc]
+    `insert into imagen (cod_prod,imagen) values ((select cod_prod from producto where cod_prod=$1),$2); `,
+    [cod_prod,imagen]
     )
     return response.command
 }
@@ -125,20 +100,13 @@ async function deleteProduct(cod_prod){
     return response.command
 }
 
-async function getImageById(id){
-    const response = await pool.query(
-        'SELECT I.imagen FROM imagen I WHERE I.cod_prod = $1 ORDER BY num_pic LIMIT 1',
-        [id]
-    )
-    return response.rows
-}
+
 
 module.exports = { 
-    getProduct,
-    getProductById,
-    categoryManage,
-    createProduct,
+    getImage,
+    getImageById,
+    createImage,
     updateProduct,
     deleteProduct,
-    getImageById
+    
 }
