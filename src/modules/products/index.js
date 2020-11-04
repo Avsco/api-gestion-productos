@@ -8,5 +8,5 @@ router.get('/products/:id', SHOW)
 router.post('/products', POST)
 router.put('/products/:id', PUT)
 router.delete('/products/:id', DELETE)
-router.get('/image', GETIMAGE)
+//router.get('/image', GETIMAGE)
 module.exports = router
