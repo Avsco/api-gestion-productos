@@ -4,27 +4,27 @@ const pool = require('../../database')
 
 async function getImageById1(cod_prod){
     
-        const response2 = await pool.query(
-            `select imagen 
-            from imagen where cod_prod = $1
-            order by num_pic limit 1`,
-            [cod_prod]
-        )
-        response.datos=response2.rows
+    const response2 = await pool.query(
+        `select imagen 
+        from imagen where cod_prod = $1
+        order by num_pic limit 1`,
+        [cod_prod]
+    )
+    response.datos=response2.rows
 
-    return response
+return response
 }
 async function getImageByIdAll(cod_prod,cantidad){
-    if(cantidad){
-        const response2 = await pool.query(
-            `select imagen 
-            from imagen where cod_prod = $1
-            order by num_pic`,
-            [cod_prod]
-        )
-        response.datos=response2.rows
-    }
-    return response
+if(cantidad){
+    const response2 = await pool.query(
+        `select imagen 
+        from imagen where cod_prod = $1
+        order by num_pic`,
+        [cod_prod]
+    )
+    response.datos=response2.rows
+}
+return response
 }
 
 
