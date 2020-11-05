@@ -1,56 +1,9 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getImage(criterio,page,limit){
 
-    if(criterio == ''){
-        const response = await pool.query(
-            "select * from imagen order by cod_prod;"
-        )
-        var result1 = response.rows
-        
-    }else{
-        const response = await pool.query(
-            "SELECT * FROM imagen ORDER BY "+criterio+";"
-        )
-        
-        var result1 = response.rows
-          
-    }
+async function getImageById1(cod_prod){
     
-    const startIndex = (page - 1) * limit
-    const endIndex = page * limit
-    const results = {}
-    
-
-    results.results = result1.slice(startIndex,endIndex)
-
-    if(endIndex < result1.length ){
-        results.next = {
-            page: page + 1,
-            limit : limit
-        }
-    }
-    if(startIndex > 0){
-        results.previus = {
-            page: page - 1,
-            limit : limit
-       }
-    }
-
-    const ros = await pool.query(
-        "select count(*) from imagen;"
-    )
-    
-    results.cant = ros.rows
-
-    return results
-}
-
-async function getImageById(cod_prod,cantidad){
-    
-    if (cantidad==1)
-    {
         const response2 = await pool.query(
             `select imagen 
             from imagen where cod_prod = $1
@@ -59,8 +12,10 @@ async function getImageById(cod_prod,cantidad){
         )
         response.datos=response2.rows
 
-    }else{
-
+    return response
+}
+async function getImageByIdAll(cod_prod,cantidad){
+    if(cantidad){
         const response2 = await pool.query(
             `select imagen 
             from imagen where cod_prod = $1
@@ -68,10 +23,7 @@ async function getImageById(cod_prod,cantidad){
             [cod_prod]
         )
         response.datos=response2.rows
-
-       
     }
-
     return response
 }
 
@@ -103,8 +55,8 @@ async function deleteImage(cod_prod,num_pic){
 
 
 module.exports = { 
-    getImage,
-    getImageById,
+    getImageByIdAll,
+    getImageById1,
     createImage,
     updateImage,
     deleteImage,
