@@ -60,42 +60,15 @@ async function getProduct(criterio,page,limit){
     return results
 }
 
-async function getProductById(cod_prod,cantidad){
-    /*En la query de la URL se pide que los datos sean mandado como /products/id/cantidad
-    la cantidad define el número de imágenes que se quiere, donde al colocar 1, trae solo 1, cualquier otro valor
-    trae todas las imagenes disponibles*/ 
+async function getProductById(cod_prod){ 
     const dat = await pool.query(
-        'SELECT * FROM producto WHERE cod_prod = $1',
+        `select uno.cod_prod, c.nombre_cat, nombre_prod,descripcion,
+        precio_unid,peso,unidad_med,fecha_venc,fecha_adic,cantidad
+        from (SELECT * FROM producto WHERE cod_prod = $1) as uno, categoria  c
+        where c.cod_cat = uno.cod_cat;`,
         [cod_prod]
     )
     response.datos=dat.rows
-
-    if (cantidad==1)
-    {
-
-        const response2 = await pool.query(
-            `select imagen 
-            from imagen
-            where cod_prod = $1
-            order by num_pic limit 1`,
-            [cod_prod]
-        )
-        response.imagenes=response2.rows
-
-    }else{
-
-        const response2 = await pool.query(
-            `
-            select imagen 
-            from imagen
-            where cod_prod = $1
-            order by num_pic`,
-            [cod_prod]
-        )
-        response.imagenes=response2.rows
-
-       
-    }
 
     return response
 }
@@ -138,13 +111,6 @@ async function deleteProduct(cod_prod){
     return response.command
 }
 
-async function getImageById(id){
-    const response = await pool.query(
-        'SELECT I.imagen FROM imagen I WHERE I.cod_prod = $1 ORDER BY num_pic LIMIT 1',
-        [id]
-    )
-    return response.rows
-}
 
 module.exports = { 
     getProduct,
@@ -152,6 +118,5 @@ module.exports = {
     categoryManage,
     createProduct,
     updateProduct,
-    deleteProduct,
-    getImageById
+    deleteProduct
 }

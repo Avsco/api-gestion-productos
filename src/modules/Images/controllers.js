@@ -85,5 +85,6 @@ module.exports = {
     POST,
     PUT,
     DELETE,
- 
+    getImageById1,
+    getImageByIdAll
 }

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router()
 
-const { GET, SHOW, POST, PUT, DELETE } = require('./controllers')
+const { SHOW, POST, PUT, DELETE } = require('./controllers')
 
 /*router.get('/images', GET)*/
 router.get('/images/:id', SHOW)
