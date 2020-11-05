@@ -10,11 +10,24 @@ async function getProduct(criterio,page,limit){
         var result1 = response.rows
         
     }else{
+
+
+         if(criterio == 'fecha_adic'){
+        const response = await pool.query(
+            "select * from producto order by fecha_adic desc;"
+        )
+        var result1 = response.rows
+        
+    }else{
+
+        
         const response = await pool.query(
             "SELECT * FROM producto ORDER BY "+criterio+";"
         )
         
         var result1 = response.rows
+          
+    }
           
     }
     
