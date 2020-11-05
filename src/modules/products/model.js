@@ -109,10 +109,10 @@ async function createProduct(nombre_prod, descripcion, categoria, precio_unid, c
     return response.command
 }
 
-async function updateProduct(nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){
+async function updateProduct(cod_prod,nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){
     const response = await pool.query(
-        'UPDATE producto SET nombre_prod=$1, descripcion=$2, precio_unid=$3, peso=$4, unidad_med=$5, fecha_venc=$6, cantidad=$7;',
-        [nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
+        'UPDATE producto SET nombre_prod=$2, descripcion=$3, precio_unid=$4, peso=$5, unidad_med=$6, fecha_venc=$7, cantidad=$8 WHERE cod_prod=$1;',
+        [cod_prod, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
     )
     return response.command
 }

@@ -47,7 +47,7 @@ async function POST (req, res) {
         if(!(cod_prod && imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
         await createImage(cod_prod, imagen)
 
-        return res.status(200).json('Created product')
+        return res.status(200).json('Image created')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
@@ -60,7 +60,7 @@ async function PUT (req, res) {
         if(!(num_pic,imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
         await updateImage(id, num_pic, imagen)
 
-        return res.status(200).json('Updated product')
+        return res.status(200).json('Image updated')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
@@ -73,7 +73,7 @@ async function DELETE (req, res) {
         if(!(num_pic)) return res.status(400).json({ msg: 'Complete todos los datos' })
         await deleteImage(id,num_pic)
 
-        return res.status(200).json('Deleted product')
+        return res.status(200).json('Image deleted')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }

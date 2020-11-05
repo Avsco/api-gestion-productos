@@ -44,7 +44,7 @@ async function POST (req, res) {
         const creaCat = await categoryManage(categoria)
         await createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc)
 
-        return res.status(200).json('Created product')
+        return res.status(200).json('Product created')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
@@ -56,7 +56,7 @@ async function PUT (req, res) {
         const { nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad } = req.body
         await updateProduct(id, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad)
 
-        return res.status(200).json('Updated product')
+        return res.status(200).json('Product updated')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
@@ -67,7 +67,7 @@ async function DELETE (req, res) {
         const id = req.params.id
         await deleteProduct(id)
 
-        return res.status(200).json('Deleted product')
+        return res.status(200).json('Product deleted')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
