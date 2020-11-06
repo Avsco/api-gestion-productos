@@ -82,7 +82,7 @@ async function categoryManage(categoria){
 }
 
 async function createProduct(nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc){
-    const response =  await pool.query(
+    await pool.query(
     
     `insert into producto (cod_cat, nombre_prod, descripcion, precio_unid, cantidad, peso, unidad_med, fecha_venc,fecha_adic)
         values ((select cod_cat
@@ -92,7 +92,16 @@ async function createProduct(nombre_prod, descripcion, categoria, precio_unid, c
     ,
     [nombre_prod, descripcion, categoria, precio_unid, cantidad, peso, unidad_med, fecha_venc]
     )
-    return response.command
+    const id = await getIdByName(nombre_prod)
+    return id
+}
+
+async function getIdByName(nombre_prod){
+    const response = await pool.query(
+        'select cod_prod from producto where nombre_prod = $1;',
+        [nombre_prod]
+    )
+    return response.rows
 }
 
 async function updateProduct(cod_prod,nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad){

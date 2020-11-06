@@ -1,8 +1,9 @@
 const products = require('./products')
-const images = require('./images')
+const images = require('./Images')
 
 function router (app) {
-    app.use(products,images)
+    app.use(images)
+    app.use(products)
 }
 
 module.exports = router
