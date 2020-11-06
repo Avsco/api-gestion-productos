@@ -5,8 +5,7 @@ async function getProduct(criterio,page,limit){
 
     if(criterio == ''){
         const response = await pool.query(
-            `SELECT * FROM producto where cantidad>'0' 
-                and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY cod_prod;`,
+            `SELECT * FROM producto ORDER BY cod_prod;`,
         )
         var result1 = response.rows
         
@@ -15,8 +14,7 @@ async function getProduct(criterio,page,limit){
 
          if(criterio == 'fecha_adic'){
         const response = await pool.query(
-            `select * from producto where cantidad>'0'
-                and (fecha_venc>NOW()or fecha_venc is NULL) order by fecha_adic desc;`,
+            `select * from producto order by fecha_adic desc;`,
         )
         var result1 = response.rows
         
@@ -24,8 +22,7 @@ async function getProduct(criterio,page,limit){
 
         
         const response = await pool.query(
-            `SELECT * FROM producto where cantidad>'0'
-                and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+`;`,
+            `SELECT * FROM producto ORDER BY `+criterio+`;`,
         )
         
         var result1 = response.rows
