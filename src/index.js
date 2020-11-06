@@ -12,7 +12,6 @@ const init = async () => {
     app.use(express.urlencoded({ extended: false }))
     app.use(cors())
     
-
     modules(app)
 
     // app.use(express.static(path.join(__dirname, '../public')))
