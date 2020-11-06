@@ -6,15 +6,12 @@ const port = process.env.PORT || 4000
 const app = express()
 
 const modules = require('./modules')
-const morgan = require('morgan')
 
 const init = async () => {
     app.use(express.json({limit: '5mb'}))
     app.use(express.urlencoded({ extended: false }))
     app.use(cors())
     
-    if (process.env.NODE_ENV !== 'production')
-        app.use(morgan('dev'))
 
     modules(app)
 
