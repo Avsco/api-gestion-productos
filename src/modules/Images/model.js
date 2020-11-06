@@ -28,10 +28,10 @@ return response
 }
 
 
-async function createImage(cod_prod,imagen){
+async function createImage(cod_prod,imagen2){
     const response =  await pool.query(
     `insert into imagen (cod_prod,imagen) values ((select cod_prod from producto where cod_prod=$1),$2); `,
-    [cod_prod,imagen]
+    [cod_prod,imagen2]
     )
     return response.command
 }

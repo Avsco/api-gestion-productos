@@ -44,8 +44,17 @@ async function SHOW (req, res) {
 async function POST (req, res) {
     try {
         const {cod_prod, imagen } = req.body
+        console.log(imagen.substr(12,15))
+        if(imagen.substr(11,4) == 'jpeg'){
+            var imagen2 = imagen.replace('data:image/jpeg;base64,', '');
+        }
+        else if(imagen.substr(11,3) == 'jpg'){
+            var imagen2 = imagen.replace('data:image/jpg;base64,', '');
+        }else{
+            var imagen2 = imagen.replace('data:image/png;base64,', '');
+        }
         if(!(cod_prod && imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await createImage(cod_prod, imagen)
+        await createImage(cod_prod, imagen2)
 
         return res.status(200).json('Image created')
     } catch (error) {
