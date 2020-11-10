@@ -5,6 +5,8 @@ const {
     createProduct,
     updateProduct,
     deleteProduct,
+    getProductsWithDiscount,
+    getProductByCategory
     } = require('./model')
 
 async function GET(req, res) {

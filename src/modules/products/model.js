@@ -73,6 +73,22 @@ async function getProductById(cod_prod){
     return response
 }
 
+async function getProductsWithDiscount(){
+    const res = await pool.query(
+        `select p.nombre_prod, p.precio_unid, p.descripcion
+        from producto p, descuento d
+        where c.cod_prod=d.cod_prod`
+    )
+}
+
+async function getProductByCategory(categoria){
+    const res = await pool.query(
+        `select p.nombre_prod, p.precio_unid, p.descripcion 
+        from producto p, categoria c 
+        where c.cod_cat=p.cod_cat and c.nombre_cat=$1`
+    )
+}
+
 async function categoryManage(categoria){
     const response = await pool.query(
         'INSERT INTO categoria (cod_admin, nombre_cat) SELECT 1, CAST($1 AS VARCHAR) WHERE NOT EXISTS (SELECT nombre_cat FROM categoria WHERE nombre_cat = $1);',
@@ -127,5 +143,7 @@ module.exports = {
     categoryManage,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductsWithDiscount,
+    getProductByCategory
 }
