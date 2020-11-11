@@ -77,16 +77,32 @@ async function getProductsWithDiscount(){
     const res = await pool.query(
         `select p.nombre_prod, p.precio_unid, p.descripcion
         from producto p, descuento d
-        where c.cod_prod=d.cod_prod`
+        where p.cod_prod=d.cod_prod`
     )
+    response.datos=res.rows
+    return response
 }
 
 async function getProductByCategory(categoria){
     const res = await pool.query(
         `select p.nombre_prod, p.precio_unid, p.descripcion 
         from producto p, categoria c 
-        where c.cod_cat=p.cod_cat and c.nombre_cat=$1`
+        where c.cod_cat=p.cod_cat and c.nombre_cat=$1`,
+        [categoria]
     )
+    response.datos=res.rows
+    return response
+}
+
+async function getPromotionsForProduct (cod_prod){
+    const res = await pool.query(
+        `select p.nombr_prom 
+        from promocion p, prod_prom c
+        where c.cod_prod=$1 and c.cod_prom=p.cod_prom`,
+        [cod_prod]
+    )
+    response.datos=res.rows
+    return response
 }
 
 async function categoryManage(categoria){
@@ -145,5 +161,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getProductsWithDiscount,
-    getProductByCategory
+    getProductByCategory,
+    getPromotionsForProduct
 }

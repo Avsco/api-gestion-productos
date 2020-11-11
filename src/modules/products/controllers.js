@@ -6,7 +6,8 @@ const {
     updateProduct,
     deleteProduct,
     getProductsWithDiscount,
-    getProductByCategory
+    getProductByCategory,
+    getPromotionsForProduct
     } = require('./model')
 
 async function GET(req, res) {
@@ -72,6 +73,35 @@ async function DELETE (req, res) {
     }
 }
 
+async function DISCOUNT (req, res){
+    try {
+        const resp= await getProductsWithDiscount();
+        return res.status(200).json(resp)
+    } catch (error) {
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+async function FILTER (req, res){
+    try {
+        const categoria=req.params.categoria
+        const resp= await getProductByCategory(categoria)
+        return res.status(200).json(resp)
+    } catch (error) {
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+async function PROMOS (req, res){
+    try {
+        const id=req.params.id
+        const resp=await getPromotionsForProduct(id)
+        return res.status(200).json(resp)
+    } catch (error) {
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
 
 module.exports = {
     GET,
@@ -79,4 +109,7 @@ module.exports = {
     POST,
     PUT,
     DELETE,
+    DISCOUNT,
+    FILTER,
+    PROMOS
 }
