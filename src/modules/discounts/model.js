@@ -6,7 +6,9 @@ async function getDiscount(criterio,page,limit){
     if(criterio == ''){
         const response = await pool.query(
             `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-            as uno where uno.cod_prod=p.cod_prod ORDER BY cod_prod;`,
+            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+			
+			ORDER BY cod_prod;`,
         )
         var result1 = response.rows
         
@@ -15,7 +17,8 @@ async function getDiscount(criterio,page,limit){
 
          if(criterio == 'fecha_adic'){
         const response = await pool.query(
-            `SELECT p.* FROM producto p,(select cod_prod from descuento ) as uno where uno.cod_prod=p.cod_prod 
+            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
             ORDER BY fecha_adic desc;`,
         )
         var result1 = response.rows
@@ -24,8 +27,8 @@ async function getDiscount(criterio,page,limit){
 
         
         const response = await pool.query(
-            `
-            SELECT p.* FROM producto p,(select cod_prod from descuento ) as uno where uno.cod_prod=p.cod_prod 
+            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
             ORDER BY `+criterio+`;`,
             
         )
@@ -57,7 +60,8 @@ async function getDiscount(criterio,page,limit){
     }
 
     const ros = await pool.query(
-        "SELECT count(*) FROM descuento;"
+        `SELECT count(*) FROM producto p,(select cod_prod from descuento ) 
+        as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())`
     )
     
     results.cant = ros.rows
@@ -77,24 +81,24 @@ async function getDiscountById(cod_prod){
 
 
 async function createDiscount(cod_prod, porcentaje, cant_req){
-    await pool.query(
+    const response =   await pool.query(
     
     `insert into descuento values ($1,$2,$3); ` 
 
     ,
     [cod_prod, porcentaje, cant_req]
     )
-    const id = await getIdByName(nombre_prod)
-    return id
+    //const id = await getIdByName(cod_prod)
+    return response.command
 }
 
-async function getIdByName(nombre_prod){
+/*async function getIdByName(nombre_prod){
     const response = await pool.query(
-        'select cod_prod from producto where nombre_prod = $1;',
+        'select cod_prod from descuento where cod_prod = $1;',
         [nombre_prod]
     )
     return response.rows
-}
+}*/
 
 async function updateDiscount(cod_prod, porcentaje, cantidad_req){
     const response = await pool.query(
