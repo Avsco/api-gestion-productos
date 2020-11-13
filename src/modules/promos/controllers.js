@@ -7,7 +7,11 @@ const {
 
 async function GET (req, res){
     try {
-        const response=await getPromotions()
+        const criterio = req.query.criterio
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+
+        const response=await getPromotions(criterio, page, limit)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })

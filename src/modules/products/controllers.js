@@ -6,17 +6,17 @@ const {
     updateProduct,
     deleteProduct,
     getProductsWithDiscount,
-    getProductByCategory,
     getPromotionsForProduct
     } = require('./model')
 
 async function GET(req, res) {
     try {
         const criterio = req.query.criterio
+        const categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
-        const response = await getProduct(criterio,page,limit)
+        const response = await getProduct(criterio,categoria,page,limit)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -82,15 +82,6 @@ async function DISCOUNT (req, res){
     }
 }
 
-async function FILTER (req, res){
-    try {
-        const categoria=req.params.categoria
-        const resp= await getProductByCategory(categoria)
-        return res.status(200).json(resp)
-    } catch (error) {
-        return res.status(500).json({ errorCode: error.code, msg: error.message })
-    }
-}
 
 async function PROMOS (req, res){
     try {
@@ -110,6 +101,5 @@ module.exports = {
     PUT,
     DELETE,
     DISCOUNT,
-    FILTER,
     PROMOS
 }

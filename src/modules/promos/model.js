@@ -12,13 +12,54 @@ async function getPromotionById(cod_prom){
     return response;
 }
 
-async function getPromotions(){
-    const res=await pool.query(
-        `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin
-        from promocion;`
+async function getPromotions(criterio, page, limit){
+    if(criterio == ''){
+        const response = await pool.query(
+            `SELECT * FROM promocion ORDER BY cod_prom;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+         if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `select * from promocion order by fecha_inic desc;`,
+            )
+        var result1 = response.rows
+        
+        }else{
+            const response = await pool.query(
+                `SELECT * FROM producto ORDER BY `+criterio+`;`,
+            )
+            var result1 = response.rows
+        }
+    }
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        "SELECT count(*) FROM promocion;"
     )
-    response.datos=res.rows;
-    return response;
+    
+    results.cant = ros.rows
+
+    return results
 }
 
 async function getPromotionImage(cod_prom){
