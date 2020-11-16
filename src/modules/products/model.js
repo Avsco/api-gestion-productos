@@ -1,6 +1,68 @@
 const { response } = require('express')
 const pool = require('../../database')
 
+async function getProductClient(criterio,page,limit){
+
+    if(criterio == ''){
+        const response = await pool.query(
+            `SELECT * FROM producto where cantidad>'0'
+             and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY cod_prod;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+
+         if(criterio == 'fecha_adic'){
+        const response = await pool.query(
+            `select * from producto where cantidad>'0'
+            and (fecha_venc>NOW()or fecha_venc is NULL) order by fecha_adic desc;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+        
+        const response = await pool.query(
+            `SELECT * FROM producto where cantidad>'0'
+            and (fecha_venc>NOW()or fecha_venc is NULL)ORDER BY `+criterio+`;`,
+        )
+        
+        var result1 = response.rows
+          
+    }
+          
+    }
+    
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        "SELECT count(*) FROM producto;"
+    )
+    
+    results.cant = ros.rows
+
+    return results
+}
+
 async function getProduct(criterio,page,limit){
 
     if(criterio == ''){
@@ -123,6 +185,7 @@ async function deleteProduct(cod_prod){
 
 module.exports = { 
     getProduct,
+    getProductClient,
     getProductById,
     categoryManage,
     createProduct,

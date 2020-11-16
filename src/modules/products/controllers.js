@@ -1,5 +1,6 @@
 const {
     getProduct,
+    getProductClient,
     getProductById,
     categoryManage,
     createProduct,
@@ -9,12 +10,15 @@ const {
 
 async function GET(req, res) {
     try {
+        var response
         const criterio = req.query.criterio
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
-
-        const response = await getProduct(criterio,page,limit)
-
+        if(req.query.usr=='1234'){
+            response = await getProductClient(criterio,page,limit)
+        }else{
+            response = await getProduct(criterio,page,limit)
+        }
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
