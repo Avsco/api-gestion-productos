@@ -15,20 +15,26 @@ async function getPromotionById(cod_prom){
 async function getPromotions(criterio, page, limit){
     if(criterio == ''){
         const response = await pool.query(
-            `SELECT * FROM promocion ORDER BY cod_prom;`,
+            `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
+            FROM promocion 
+            ORDER BY cod_prom;`,
         )
         var result1 = response.rows
         
     }else{
          if(criterio == 'fecha_adic'){
             const response = await pool.query(
-                `select * from promocion order by fecha_inic desc;`,
+                `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
+                from promocion 
+                order by fecha_inic desc;`,
             )
         var result1 = response.rows
         
         }else{
             const response = await pool.query(
-                `SELECT * FROM producto ORDER BY `+criterio+`;`,
+                `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
+                FROM promocion
+                ORDER BY `+criterio+`;`,
             )
             var result1 = response.rows
         }

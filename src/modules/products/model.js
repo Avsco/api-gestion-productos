@@ -28,20 +28,20 @@ async function getProduct(criterio,categoria,page,limit){
 
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto WHERE cod_cat in (SELECT cod_cat from categoria where nombre_cat=`+ categoria+`) ORDER BY cod_prod;`,
+                `SELECT * FROM producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY cod_prod;`, [categoria]
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto WHERE cod_cat in (SELECT cod_cat from categoria where nombre_cat=`+ categoria+`) order by fecha_adic desc;`,
+                    `select * from producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) order by fecha_adic desc;`, [categoria]
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto WHERE cod_cat in (SELECT cod_cat from categoria where nombre_cat=`+ categoria+`) ORDER BY `+criterio+`;`,
+                    `SELECT * FROM producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY `+criterio+`;`, [categoria]
                 )
                 var result1 = response.rows
             }
