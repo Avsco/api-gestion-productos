@@ -2,12 +2,12 @@ const { search } = require('./model')
 
 async function GET(req, res) {
     try {
-        const criterio = req.query.criterio
+        const table = req.query.table
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
         const expresion = req.query.expresion
 
-        const response = await search(expresion, criterio, page, limit)
+        const response = await search(expresion, table, page, limit)
 
         return res.status(200).json(response)
     } catch (error) {

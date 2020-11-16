@@ -1,7 +1,16 @@
 const pool = require('../../database')
 
-async function search(expresion, criterio, page, limit){
-
+async function search(expresion, table, page, limit){
+    console.log(table);
+    const response = {}
+    if(table === 'producto')
+        response.results = await searchProducts(expresion, page, limit)
+    else if(table === 'descuento')
+        response.results = await searchDiscounts(expresion, page, limit)
+    else if(table === 'promocion')
+        response.results = await searchPromotions(expresion, page, limit)
+    response.cant = await countRows(table)
+    return response
 }
 
 async function searchProducts(expresion, page, limit){
@@ -20,8 +29,7 @@ async function searchProducts(expresion, page, limit){
 
 async function countRows(nameTable) {
     const response = await pool.query(
-        `SELECT count(*) from $1`,
-        [nameTable]
+        `SELECT count(*) from ${nameTable}`
     )
     return response.rows
 }
