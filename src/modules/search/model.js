@@ -1,16 +1,22 @@
 const pool = require('../../database')
 
 async function search(expresion, table, page, limit){
-    console.log(table);
-    const response = {}
-    if(table === 'producto')
-        response.results = await searchProducts(expresion, page, limit)
-    else if(table === 'descuento')
-        response.results = await searchDiscounts(expresion, page, limit)
-    else if(table === 'promocion')
-        response.results = await searchPromotions(expresion, page, limit)
-    response.cant = await countRows(table)
-    return response
+    try {
+        const response = {}
+        if(table === 'producto')
+            response.results = await searchProducts(expresion, page, limit)
+        else if(table === 'descuento')
+            response.results = await searchDiscounts(expresion, page, limit)
+        else if(table === 'promocion')
+            response.results = await searchPromotions(expresion, page, limit)
+        else
+            throw new Error('The table not exist')
+            
+        response.cant = await countRows(table)
+        return response
+    } catch (error) {
+        throw new Error(error)
+    }
 }
 
 async function searchProducts(expresion, page, limit){
