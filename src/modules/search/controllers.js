@@ -7,7 +7,7 @@ async function GET(req, res) {
         const limit = parseInt(req.query.limit)
         const expresion = req.query.expresion
 
-        const response = await getProduct(expresion, criterio, page, limit)
+        const response = await search(expresion, criterio, page, limit)
 
         return res.status(200).json(response)
     } catch (error) {
