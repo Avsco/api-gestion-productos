@@ -10,19 +10,31 @@ const {
     getPromotionsForProduct
     } = require('./model')
 
+
+    /*http://localhost:4000/products?page=1&limit=20&filter=1 trae todos los productos que pueden tener
+    descuentos o ser parte de promociones*/
+
 async function GET(req, res) {
     try {
+        console.log(req.query)
         var response
-       
+        var comp = "\""+"\""
+        const filter = req.query.filter
         const criterio = req.query.criterio
-        const categoria = req.query.categoria
+        var categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
-        if(req.query.usr=='1234'){
+        if ((categoria==comp)||(categoria==undefined) ){categoria=''}
 
+        if(req.query.usr=='1234'){
+            console.log("aquiCliente")
+            console.log("criterio "+criterio)
+            console.log("categoria "+categoria)
             response = await getProductClient(criterio,categoria,page,limit)
         }else{
-            response = await getProduct(criterio,categoria,page,limit)
+            console.log("aquiAdmin")
+            console.log(filter)
+            response = await getProduct(criterio,categoria,page,limit,filter)
         }
         return res.status(200).json(response)
     } catch (error) {
