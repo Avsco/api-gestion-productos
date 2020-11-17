@@ -9,10 +9,11 @@ const {
 async function GET(req, res) {
     try {
         const criterio = req.query.criterio
+        const categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
-        const response = await getDiscount(criterio,page,limit)
+        const response = await getDiscount(criterio,categoria,page,limit)
 
         return res.status(200).json(response)
     } catch (error) {

@@ -1,42 +1,62 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getDiscount(criterio,page,limit){
+async function getDiscount(criterio,categoria,page,limit){
 
-    if(criterio == ''){
-        const response = await pool.query(
-            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-			
-			ORDER BY cod_prod;`,
-        )
-        var result1 = response.rows
-        
-    }else{
-
-
-         if(criterio == 'fecha_adic'){
-        const response = await pool.query(
-            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-            ORDER BY fecha_adic desc;`,
-        )
-        var result1 = response.rows
-        
-    }else{
-
-        
-        const response = await pool.query(
-            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-            as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-            ORDER BY `+criterio+`;`,
+    if (categoria==''){
+        if(criterio == ''){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
             
-        )
-        
-        var result1 = response.rows
-          
-    }
-          
+	    		ORDER BY cod_prod;`,
+            )
+            var result1 = response.rows
+        }else{
+             if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                ORDER BY fecha_adic desc;`,
+            )
+            var result1 = response.rows
+        }else{
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                ORDER BY `+criterio+`;`,
+            )
+            var result1 = response.rows
+        }
+        }
+    }else{
+        if(criterio == ''){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+	    		ORDER BY cod_prod;`, [categoria]
+            )
+            var result1 = response.rows
+        }else{
+             if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY fecha_adic desc;`, [categoria]
+            )
+            var result1 = response.rows
+        }else{
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY `+criterio+`;`, [categoria]
+            )
+            var result1 = response.rows
+        }
+        }
     }
     
     const startIndex = (page - 1) * limit
