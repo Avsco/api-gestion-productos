@@ -109,20 +109,20 @@ async function getProduct(criterio,categoria,page,limit){
 
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY cod_prod;`, [categoria]
+                `SELECT * FROM producto ORDER BY cod_prod;`
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) order by fecha_adic desc;`, [categoria]
+                    `select * from producto order by fecha_adic desc;`
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto WHERE cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY `+criterio+`;`, [categoria]
+                    `SELECT * FROM producto ORDER BY `+criterio+`;`
                 )
                 var result1 = response.rows
             }

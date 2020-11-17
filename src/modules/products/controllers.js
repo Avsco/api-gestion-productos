@@ -13,11 +13,13 @@ const {
 async function GET(req, res) {
     try {
         var response
+       
         const criterio = req.query.criterio
         const categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
         if(req.query.usr=='1234'){
+
             response = await getProductClient(criterio,categoria,page,limit)
         }else{
             response = await getProduct(criterio,categoria,page,limit)
