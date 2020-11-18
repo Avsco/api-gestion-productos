@@ -44,7 +44,6 @@ async function SHOW (req, res) {
 async function POST (req, res) {
     try {
         const {cod_prod, imagen } = req.body
-        console.log(imagen.substr(12,15))
         if(imagen.substr(11,4) == 'jpeg'){
             var imagen2 = imagen.replace('data:image/jpeg;base64,', '');
         }
