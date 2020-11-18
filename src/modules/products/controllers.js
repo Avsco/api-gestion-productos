@@ -16,20 +16,19 @@ const {
 
 async function GET(req, res) {
     try {
-        console.log(req.query)
         var response
-        var comp = "\""+"\""
-        const filter = req.query.filter
-        const criterio = req.query.criterio
-        var categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
+        const filter = req.query.filter
+        const criterio = req.query.criterio
+
+        var comp = "\""+"\""
+        var categoria = req.query.categoria
+ 
         if ((categoria==comp)||(categoria==undefined) ){categoria=''}
 
         if(req.query.usr=='1234'){
-            console.log("aquiCliente")
-            console.log("criterio "+criterio)
-            console.log("categoria "+categoria)
+
             response = await getProductClient(criterio,categoria,page,limit)
         }else{
             console.log("aquiAdmin")

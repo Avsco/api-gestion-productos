@@ -9,10 +9,12 @@ const {
 async function GET(req, res) {
     try {
         const criterio = req.query.criterio
-        const categoria = req.query.categoria
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
-
+        var comp = "\""+"\""
+        var categoria = req.query.categoria
+ 
+        if ((categoria==comp)||(categoria==undefined) ){categoria=''}
         const response = await getDiscount(criterio,categoria,page,limit)
 
         return res.status(200).json(response)
