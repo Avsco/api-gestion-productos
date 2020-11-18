@@ -2,7 +2,7 @@ const { response } = require('express')
 const pool = require('../../database')
 
 async function getDiscount(criterio,categoria,page,limit){
-console.log("criterio "+criterio+" categoria "+categoria)
+//console.log("criterio "+criterio+" categoria "+categoria)
     if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
