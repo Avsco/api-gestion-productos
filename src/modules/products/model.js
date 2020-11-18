@@ -85,7 +85,8 @@ async function getProduct(criterio,categoria,page,limit,filter){
     if(filter==1)
     {
         const response = await pool.query(
-            `SELECT * FROM producto where cantidad is not null and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY cod_prod;`,
+            `SELECT * FROM producto where cantidad>'0'
+                and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+`;`,
         )
         var result1 = response.rows
     }
@@ -251,7 +252,6 @@ async function deleteProduct(cod_prod){
     )
     return response.command
 }
-
 
 module.exports = { 
     getProduct,
