@@ -6,20 +6,6 @@ const {
     deleteImage,
 } = require('./model')
 
-/*async function GET(req, res) {
-    try {
-
-        const criterio = req.query.criterio
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.limit)
-
-        const response = await getImage(criterio,page,limit)
-
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json({ errorCode: error.code, msg: error.message })
-    }
-}*/
 /*El metodo show nos da 2 opciones para traer imagenes, la primera nos trae todas las imagenes de un producto segun su id
 Su sintaxis es: http://localhost:4000/images/6?cantidad=1 donde el valor de "1" es irrelevante, ya que trae todas las imagenes
 sin importar el valor que se coloque, ya que solo verifica que el campo cantidad tenga un valor en la query URL.
