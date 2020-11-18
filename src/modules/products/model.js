@@ -1,9 +1,7 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getProduct(expresion, criterio,page,limit){
-
-    if(expresion) return await searchProducts(expresion)
+async function getProduct(criterio, page, limit){
 
     if(criterio == ''){
         const response = await pool.query(
@@ -123,18 +121,6 @@ async function deleteProduct(cod_prod){
         [cod_prod]
     )
     return response.command
-}
-
-async function searchProducts(expresion){
-    expresion = expresion.toLowerCase()
-    const response = await pool.query(
-        `SELECT nombre_prod 
-        FROM producto 
-        WHERE LOWER(nombre_prod) LIKE '${expresion}%' 
-        AND (fecha_venc > NOW() or fecha_venc IS NULL)
-        FETCH FIRST 10 ROWS ONLY;`
-    )
-    return response.rows
 }
 
 module.exports = { 
