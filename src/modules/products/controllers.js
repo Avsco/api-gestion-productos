@@ -1,5 +1,7 @@
 const {
     getProduct,
+    getPromos,
+    getDesc,
     getProductById,
     categoryManage,
     createProduct,
@@ -12,9 +14,13 @@ async function GET(req, res) {
         const criterio = req.query.criterio
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
-
-        const response = await getProduct(criterio,page,limit)
-
+        if(req.query.tipo == 'productos'){
+            var response = await getProduct(criterio,page,limit)
+        }else if(req.query.tipo == 'promociones'){
+            var response = await getPromos(criterio,page,limit)
+        }else{
+            var response = await getDesc(criterio,page,limit)
+        }
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })

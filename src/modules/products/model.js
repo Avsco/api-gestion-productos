@@ -59,6 +59,125 @@ async function getProduct(criterio,page,limit){
 
     return results
 }
+async function getPromos(criterio,page,limit){
+
+    if(criterio == 'nombre_prod'){
+        const response = await pool.query(
+            `SELECT * FROM promocion ORDER BY cod_prom;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+
+         if(criterio == 'fecha_adic'){
+        const response = await pool.query(
+            `select * from promocion order by fecha_ini desc;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+        
+        const response = await pool.query(
+            `SELECT * FROM producto ORDER BY `+criterio+`;`,
+        )
+        
+        var result1 = response.rows
+          
+    }
+          
+    }
+    
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        "SELECT count(*) FROM promocion;"
+    )
+    
+    results.cant = ros.rows
+
+    return results
+}
+async function getDesc(criterio,page,limit){
+
+    if(criterio == 'nombre_prod'){
+        const response = await pool.query(
+            `select p.*, d.porcentaje from producto p
+            inner join descuento d on p.cod_prod = d.cod_prod;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+
+         if(criterio == 'fecha_adic'){
+        const response = await pool.query(
+            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+            as uno where (uno.cod_prod=p.cod_prod) order by fecha_adic desc;`,
+        )
+        var result1 = response.rows
+        
+    }else{
+
+        
+        const response = await pool.query(
+            `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+            as uno where (uno.cod_prod=p.cod_prod) ORDER BY `+criterio+`;`,
+        )
+        
+        var result1 = response.rows
+          
+    }
+          
+    }
+    
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        `SELECT count(*) FROM descuento;`
+    )
+    
+    results.cant = ros.rows
+
+    return results
+}
 
 async function getProductById(cod_prod){ 
     const dat = await pool.query(
@@ -123,6 +242,8 @@ async function deleteProduct(cod_prod){
 
 module.exports = { 
     getProduct,
+    getPromos,
+    getDesc,
     getProductById,
     categoryManage,
     createProduct,

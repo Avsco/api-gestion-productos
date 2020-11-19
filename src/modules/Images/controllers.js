@@ -31,7 +31,8 @@ async function SHOW (req, res) {
         if(req.query.cantidad){
             const cantidad = req.query.cantidad
             var response = await getImageByIdAll(cod_prod,cantidad)
-        }else{
+        }
+        else{
             var response = await getImageById1(cod_prod)
         }
         return res.status(200).json(response)
