@@ -12,6 +12,25 @@ async function getPromotionById(cod_prom){
     return response;
 }
 
+async function deletePromotionById(cod_prom){
+    const res=await pool.query(
+        `delete from promocion where cod_prom=$1;`,
+        [cod_prom]
+    )
+    response.datos=res.rows;
+    return response;
+}
+
+async function deletePromotionsProductsById(cod_prom){
+    const res=await pool.query(
+        `delete from prod_prom where cod_prom=$1;`,
+        [cod_prom]
+    )
+    response.datos=res.rows;
+    return response;
+}
+
+
 async function getPromotions(criterio, page, limit){
     if(criterio == ''){
         const response = await pool.query(
@@ -90,9 +109,47 @@ async function getProductsForPromotion (cod_prom){
     return response
 }
 
+async function createPromotion(nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom){
+    const res = await pool.query(
+        `INSERT INTO promocion(
+            nombr_prom, descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin, imagen_prom)
+            VALUES ($1, $2, $3, $4, $5, $6, $7);`,
+        [nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom]
+    )
+    const idProm = await getNewProm(nombr_prom)    
+        return idProm
+}
+
+async function getNewProm(nombr_prom){
+    const res = await pool.query(
+        `select cod_prom from promocion where nombr_prom=$1;`
+        ,[nombr_prom]
+    )
+    return res.rows[0].cod_prom
+}
+
+async function addProductsToProm(idProm, products){
+    for (const key in products) {
+        if (products.hasOwnProperty(key)) {
+            const element = products[key];
+            await pool.query(
+                `insert into prod_prom(cod_prod, cod_prom, cant_prod) values($1,$2,$3);`
+                ,[key,idProm,element[0]]
+            )
+        }
+        
+    }
+}
+
 module.exports = {
     getPromotionById,
     getPromotions,
     getPromotionImage,
-    getProductsForPromotion
+    getProductsForPromotion,
+    createPromotion,
+    addProductsToProm,
+    deletePromotionById,
+    deletePromotionsProductsById
+
+ 
 }
