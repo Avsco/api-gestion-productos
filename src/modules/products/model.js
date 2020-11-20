@@ -197,7 +197,7 @@ async function getProductsWithDiscount(){
 
 async function getPromotionsForProduct (cod_prod){
     const res = await pool.query(
-        `select p.nombr_prom 
+        `select p.nombr_prom, p.cod_prom 
         from promocion p, prod_prom c
         where c.cod_prod=$1 and c.cod_prom=p.cod_prom;`,
         [cod_prod]
