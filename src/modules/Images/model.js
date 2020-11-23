@@ -44,10 +44,10 @@ async function updateImage(cod_prod,num_pic,imagen){
     return response.command
 }
 
-async function deleteImage(cod_prod,num_pic){
+async function deleteImage(cod_prod){
     const response = await pool.query(
-        'DELETE FROM imagen WHERE cod_prod = $1 and num_pic = $2;',
-        [cod_prod,num_pic]
+        'DELETE FROM imagen WHERE cod_prod = $1;',
+        [cod_prod]
     )
     return response.command
 }

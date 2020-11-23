@@ -59,9 +59,7 @@ async function PUT (req, res) {
 async function DELETE (req, res) {
     try {
         const id = req.params.id
-        const {num_pic}=req.body
-        if(!(num_pic)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await deleteImage(id,num_pic)
+        await deleteImage(id)
 
         return res.status(200).json('Image deleted')
     } catch (error) {
