@@ -13,7 +13,7 @@ async function getPromotionById(cod_prom){
 }
 
 async function getPromotions(criterio, page, limit){
-    if(criterio == ''){
+    if(criterio == 'nombre_prod'){
         const response = await pool.query(
             `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
             FROM promocion 
@@ -26,7 +26,7 @@ async function getPromotions(criterio, page, limit){
             const response = await pool.query(
                 `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
                 from promocion 
-                order by fecha_inic desc;`,
+                order by fecha_ini desc;`,
             )
         var result1 = response.rows
         

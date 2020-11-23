@@ -4,26 +4,24 @@ const pool = require('../../database')
 async function getDiscount(criterio,categoria,page,limit){
 //console.log("criterio "+criterio+" categoria "+categoria)
     if (categoria==''){
-        if(criterio == ''){
+        if(criterio == 'nombre_prod'){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-            
-	    		ORDER BY cod_prod;`,
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW());`,
             )
             var result1 = response.rows
         }else{
              if(criterio == 'fecha_adic'){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 ORDER BY fecha_adic desc;`,
             )
             var result1 = response.rows
         }else{
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 ORDER BY `+criterio+`;`,
             )
             var result1 = response.rows
@@ -32,8 +30,8 @@ async function getDiscount(criterio,categoria,page,limit){
     }else{
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
 	    		ORDER BY cod_prod;`, [categoria]
             )
@@ -41,16 +39,16 @@ async function getDiscount(criterio,categoria,page,limit){
         }else{
              if(criterio == 'fecha_adic'){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
                 ORDER BY fecha_adic desc;`, [categoria]
             )
             var result1 = response.rows
         }else{
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `select p.*, d.porcentaje from producto p
+                inner join descuento d on p.cod_prod = d.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
                 ORDER BY `+criterio+`;`, [categoria]
             )
