@@ -72,12 +72,19 @@ async function getProductClient(criterio,categoria,page,limit){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
-    
-    results.cant = ros.rows
-
+    if(categoria == ''){
+        const ros = await pool.query(
+            "SELECT count(*) FROM producto;"
+        )
+        
+        results.cant = ros.rows
+    }else{
+        const ros = await pool.query(
+            `SELECT count(*) FROM producto WHERE (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) order by fecha_adic desc;`, [categoria]
+        )
+        
+        results.cant = ros.rows
+    }
     return results
 }
 
@@ -162,9 +169,19 @@ async function getProduct(criterio,categoria,page,limit,filter){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
+    if(categoria == ''){
+        var ros = await pool.query(
+            "SELECT count(*) FROM producto;"
+        )
+        
+        results.cant = ros.rows
+    }else{
+        var ros = await pool.query(
+            `SELECT count(*) FROM producto WHERE (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1);`, [categoria]
+        )
+        
+        results.cant = ros.rows
+    }
     
     results.cant = ros.rows
 
@@ -186,9 +203,8 @@ async function getProductById(cod_prod){
 
 async function getProductsWithDiscount(){
     const res = await pool.query(
-        `select p.nombre_prod, p.precio_unid, p.descripcion
-        from producto p, descuento d
-        where p.cod_prod=d.cod_prod;`
+        `select nombre_cat
+        from categoria;`
     )
     response.datos=res.rows
     return response
