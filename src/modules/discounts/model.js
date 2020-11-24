@@ -91,7 +91,7 @@ async function getDiscount(criterio,categoria,page,limit){
 
 async function getDiscountById(cod_prod){ 
     const dat = await pool.query(
-        `select * from descuento where cod_prod=$1`,
+        `select d.cod_prod, d.porcentaje, d.cantidad_req, p.precio_unid from descuento d, producto p where d.cod_prod=p.cod_prod and p.cod_prod=$1`,
         [cod_prod]
     )
     response.datos=dat.rows
