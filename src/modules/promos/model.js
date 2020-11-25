@@ -35,7 +35,7 @@ async function getPromotions(criterio, page, limit){
     if(criterio == ''){
         const response = await pool.query(
             `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-            FROM promocion 
+            FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
             ORDER BY cod_prom;`,
         )
         var result1 = response.rows
@@ -44,7 +44,7 @@ async function getPromotions(criterio, page, limit){
          if(criterio == 'fecha_adic'){
             const response = await pool.query(
                 `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                from promocion 
+                from promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
                 order by fecha_inic desc;`,
             )
         var result1 = response.rows
@@ -52,7 +52,7 @@ async function getPromotions(criterio, page, limit){
         }else{
             const response = await pool.query(
                 `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                FROM promocion
+                FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
                 ORDER BY `+criterio+`;`,
             )
             var result1 = response.rows
