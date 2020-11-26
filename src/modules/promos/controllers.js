@@ -1,5 +1,6 @@
 const {
     getPromotionById,
+    getPromotionsClient,
     getPromotions,
     getPromotionImage,
     getProductsForPromotion,
@@ -15,7 +16,13 @@ async function GET (req, res){
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
-        const response=await getPromotions(criterio, page, limit)
+        var response 
+        if(req.query.usr=='1234'){
+
+            response = await getPromotionsClient(criterio,page,limit)
+        }else{
+            response = await getPromotions(criterio,page,limit)
+        }
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
