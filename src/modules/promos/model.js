@@ -12,6 +12,25 @@ async function getPromotionById(cod_prom){
     return response;
 }
 
+async function deletePromotionById(cod_prom){
+    const res=await pool.query(
+        `delete from promocion where cod_prom=$1;`,
+        [cod_prom]
+    )
+    response.datos=res.rows;
+    return response;
+}
+
+async function deletePromotionsProductsById(cod_prom){
+    const res=await pool.query(
+        `delete from prod_prom where cod_prom=$1;`,
+        [cod_prom]
+    )
+    response.datos=res.rows;
+    return response;
+}
+
+
 async function getPromotions(criterio, page, limit){
     if(criterio == ''){
         const response = await pool.query(
@@ -129,5 +148,8 @@ module.exports = {
     getProductsForPromotion,
     createPromotion,
     addProductsToProm,
+    deletePromotionById,
+    deletePromotionsProductsById
+
  
 }

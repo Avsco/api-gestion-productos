@@ -4,7 +4,9 @@ const {
     getPromotionImage,
     getProductsForPromotion,
     createPromotion,
-    addProductsToProm
+    addProductsToProm,
+    deletePromotionById,
+    deletePromotionsProductsById
     } = require('./model')
 
 async function GET (req, res){
@@ -71,10 +73,25 @@ async function POST(req,res){
     }
 }
 
+async function DELETE (req, res) {
+    try {
+       
+        const id = req.params.id
+        const cont = await deletePromotionsProductsById(id)
+        const response = await deletePromotionById(id)
+
+        return res.status(200).json("Hola")
+    } catch (error) {
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+
 module.exports = {
     GET,
     SHOW,
     IMAGE,
     PRODS,
+    DELETE,
     POST
 }
