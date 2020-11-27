@@ -2,7 +2,6 @@ const { response } = require('express')
 const pool = require('../../database')
 
 async function getDiscount(criterio,categoria,page,limit){
-//console.log("criterio "+criterio+" categoria "+categoria)
     if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
@@ -91,7 +90,7 @@ async function getDiscount(criterio,categoria,page,limit){
 
 async function getDiscountById(cod_prod){ 
     const dat = await pool.query(
-        `select * from descuento where cod_prod=$1`,
+        `select d.cod_prod, d.porcentaje, d.cantidad_req, p.precio_unid from descuento d, producto p where d.cod_prod=p.cod_prod and p.cod_prod=$1`,
         [cod_prod]
     )
     response.datos=dat.rows
@@ -108,17 +107,9 @@ async function createDiscount(cod_prod, porcentaje, cant_req){
     ,
     [cod_prod, porcentaje, cant_req]
     )
-    //const id = await getIdByName(cod_prod)
     return response.command
 }
 
-/*async function getIdByName(nombre_prod){
-    const response = await pool.query(
-        'select cod_prod from descuento where cod_prod = $1;',
-        [nombre_prod]
-    )
-    return response.rows
-}*/
 
 async function updateDiscount(cod_prod, porcentaje, cantidad_req){
     const response = await pool.query(

@@ -31,8 +31,6 @@ async function GET(req, res) {
 
             response = await getProductClient(criterio,categoria,page,limit)
         }else{
-            //console.log("aquiAdmin")
-            //console.log(filter)
             response = await getProduct(criterio,categoria,page,limit,filter)
         }
         return res.status(200).json(response)
