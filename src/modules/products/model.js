@@ -84,11 +84,20 @@ async function getProductClient(criterio,categoria,page,limit){
 async function getProduct(criterio,categoria,page,limit,filter){
     if(filter==1)
     {
-        const response = await pool.query(
-            `SELECT * FROM producto where cantidad>'0'
-                and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+`;`,
-        )
-        var result1 = response.rows
+        if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `SELECT * FROM producto where cantidad>'0'
+                    and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+` DESC;`,
+            )
+            var result1 = response.rows
+        }else{
+            const response = await pool.query(
+                `SELECT * FROM producto where cantidad>'0'
+                    and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+`;`,
+            )
+            var result1 = response.rows
+        }
+        
     }
     else
     
@@ -162,10 +171,15 @@ async function getProduct(criterio,categoria,page,limit,filter){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
-    
+    let ros;
+
+    if(filter == 1){
+        ros = {rows: [{count: result1.length}]};
+    }else{
+        ros = await pool.query(
+            "SELECT count(*) FROM producto;"
+        )
+    }
     results.cant = ros.rows
 
     return results
