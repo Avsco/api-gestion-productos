@@ -1,4 +1,5 @@
 const {
+    getDiscountClient,
     getDiscount,
     getDiscountById,
     createDiscount,
@@ -15,7 +16,13 @@ async function GET(req, res) {
         var categoria = req.query.categoria
  
         if ((categoria==comp)||(categoria==undefined) ){categoria=''}
-        const response = await getDiscount(criterio,categoria,page,limit)
+        var response 
+        if(req.query.usr=='1234'){
+
+            response = await getDiscountClient(criterio,categoria,page,limit)
+        }else{
+            response = await getDiscount(criterio,categoria,page,limit)
+        }
 
         return res.status(200).json(response)
     } catch (error) {
