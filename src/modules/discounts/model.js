@@ -1,7 +1,7 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getDiscount(criterio,categoria,page,limit){
+async function getDiscountClient(criterio,categoria,page,limit){
     if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
@@ -88,6 +88,93 @@ async function getDiscount(criterio,categoria,page,limit){
     return results
 }
 
+async function getDiscount(criterio,categoria,page,limit){
+    if (categoria==''){
+        if(criterio == ''){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) 
+            
+	    		ORDER BY cod_prod;`,
+            )
+            var result1 = response.rows
+        }else{
+             if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod)
+                ORDER BY fecha_adic desc;`,
+            )
+            var result1 = response.rows
+        }else{
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod)
+                ORDER BY `+criterio+`;`,
+            )
+            var result1 = response.rows
+        }
+        }
+    }else{
+        if(criterio == ''){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod)
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+	    		ORDER BY cod_prod;`, [categoria]
+            )
+            var result1 = response.rows
+        }else{
+             if(criterio == 'fecha_adic'){
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod) 
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY fecha_adic desc;`, [categoria]
+            )
+            var result1 = response.rows
+        }else{
+            const response = await pool.query(
+                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
+                as uno where (uno.cod_prod=p.cod_prod)
+                and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY `+criterio+`;`, [categoria]
+            )
+            var result1 = response.rows
+        }
+        }
+    }
+    
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+    const results = {}
+    
+
+    results.results = result1.slice(startIndex,endIndex)
+
+    if(endIndex < result1.length ){
+        results.next = {
+            page: page + 1,
+            limit : limit
+        }
+    }
+    if(startIndex > 0){
+        results.previus = {
+            page: page - 1,
+            limit : limit
+       }
+    }
+
+    const ros = await pool.query(
+        `SELECT count(*) FROM producto p,(select cod_prod from descuento ) 
+        as uno where (uno.cod_prod=p.cod_prod)`
+    )
+    
+    results.cant = ros.rows
+
+    return results
+}
+
 async function getDiscountById(cod_prod){ 
     const dat = await pool.query(
         `select d.cod_prod, d.porcentaje, d.cantidad_req, p.precio_unid from descuento d, producto p where d.cod_prod=p.cod_prod and p.cod_prod=$1`,
@@ -129,6 +216,7 @@ async function deleteDiscount(cod_prod){
 
 
 module.exports = { 
+    getDiscountClient,
     getDiscount,
     getDiscountById,
     createDiscount,

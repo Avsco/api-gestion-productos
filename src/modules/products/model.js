@@ -6,20 +6,38 @@ async function getProductClient(criterio,categoria,page,limit){
     if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto where (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY cod_prod;`,
+                `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                FROM producto
+                LEFT JOIN descuento
+                ON producto.cod_prod = descuento.cod_prod
+                where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                ORDER BY producto.cod_prod;`,
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto where (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) order by fecha_adic desc;`,
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                    ORDER BY producto.fecha_adic desc;`,
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto where (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) ORDER BY `+criterio+`;`,
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                    ORDER BY producto.`+criterio+`;`,
                 )
                 var result1 = response.rows
             }
@@ -29,23 +47,41 @@ async function getProductClient(criterio,categoria,page,limit){
 
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto WHERE (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) 
-                
-                
-                 ORDER BY cod_prod;`, [categoria]
+                `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                FROM producto
+                LEFT JOIN descuento
+                ON producto.cod_prod = descuento.cod_prod
+                where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY producto.cod_prod;`, [categoria]
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto WHERE (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) order by fecha_adic desc;`, [categoria]
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                    and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                    order by fecha_adic desc`, [categoria]
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto WHERE (cantidad>'0' or cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL) and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY `+criterio+`;`, [categoria]
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
+                    and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                    order by `+criterio+``, [categoria]
                 )
                 var result1 = response.rows
             }
@@ -105,20 +141,35 @@ async function getProduct(criterio,categoria,page,limit,filter){
  if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto ORDER BY cod_prod;`,
+                `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                FROM producto
+                LEFT JOIN descuento
+                ON producto.cod_prod = descuento.cod_prod
+                ORDER BY producto.cod_prod;`,
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto order by fecha_adic desc;`,
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    ORDER BY producto.fecha_adic desc;`,
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto ORDER BY `+criterio+`;`,
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    ORDER BY producto.`+criterio+`;`,
                 )
                 var result1 = response.rows
             }
@@ -128,20 +179,38 @@ async function getProduct(criterio,categoria,page,limit,filter){
 
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT * FROM producto where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY cod_prod ;`,[categoria]
+                `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                FROM producto
+                LEFT JOIN descuento
+                ON producto.cod_prod = descuento.cod_prod
+                where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                ORDER BY producto.cod_prod;`,[categoria]
             )
             var result1 = response.rows
             
         }else{
              if(criterio == 'fecha_adic'){
                 const response = await pool.query(
-                    `select * from producto where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) order by fecha_adic desc;`,[categoria]
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                    order by fecha_adic desc`,[categoria]
                 )
             var result1 = response.rows
             
             }else{
                 const response = await pool.query(
-                    `SELECT * FROM producto where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1) ORDER BY `+criterio+`;`,[categoria]
+                    `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
+                    unidad_med,fecha_venc,fecha_adic,cantidad,porcentaje,cantidad_req
+                    FROM producto
+                    LEFT JOIN descuento
+                    ON producto.cod_prod = descuento.cod_prod
+                    where cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
+                    order by `+criterio+`;`,[categoria]
                 )
                 var result1 = response.rows
             }
