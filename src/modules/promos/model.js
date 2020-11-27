@@ -100,7 +100,7 @@ async function getPromotionImage(cod_prom){
 
 async function getProductsForPromotion (cod_prom){
     const res = await pool.query(
-        `select p.nombre_prod, p.precio_unid
+        `select p.nombre_prod, p.precio_unid, p.cod_prod
         from producto p, prod_prom c
         where c.cod_prom=$1 and c.cod_prod=p.cod_prod;`,
         [cod_prom]
