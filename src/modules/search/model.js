@@ -23,7 +23,7 @@ async function search(expresion, table, page, limit){
 
 async function searchProducts(expresion, page, limit){
     const response = await pool.query(
-        `SELECT * 
+        `SELECT *
         FROM producto 
         WHERE LOWER(nombre_prod) LIKE '%${expresion}%' 
         AND (fecha_venc > NOW() OR fecha_venc IS NULL)
@@ -35,8 +35,9 @@ async function searchProducts(expresion, page, limit){
 
 async function searchDiscounts(expresion, page, limit){
     const response = await pool.query(
-        `SELECT *
-        FROM descuento, (SELECT cod_prod, nombre_prod, descripcion, precio_unid, fecha_adic
+        `SELECT UNO.cod_prod, UNO.nombre_prod, descuento.porcentaje, 
+        descuento.cantidad_req, UNO.nombre_prod, UNO.descripcion, precio_unid
+        FROM descuento, (SELECT cod_prod, nombre_prod, descripcion, precio_unid
             FROM producto 
             WHERE LOWER(nombre_prod) LIKE '%${expresion}%'
             AND (fecha_venc > NOW() OR fecha_venc IS NULL)) as UNO
@@ -49,7 +50,9 @@ async function searchDiscounts(expresion, page, limit){
 
 async function searchPromotions(expresion, page, limit){
     const response = await pool.query(
-        `SELECT DISTINCT promocion.cod_prom, promocion.nombr_prom
+        `SELECT DISTINCT promocion.fecha_ini,promocion.fecha_fin,
+         promocion.cod_prom, promocion.nombr_prom, 
+         promocion.descrip_prom, promocion.precio_prom
         FROM promocion, (SELECT cod_prom
             FROM prod_prom, (SELECT cod_prod
                 FROM producto 
@@ -57,6 +60,8 @@ async function searchPromotions(expresion, page, limit){
                 AND (fecha_venc > NOW() OR fecha_venc IS NULL)) as UNO
             WHERE UNO.cod_prod = prod_prom.cod_prod) as DOS
         WHERE DOS.cod_prom = promocion.cod_prom
+        AND promocion.fecha_ini <= NOW()
+        AND promocion.fecha_fin >= NOW()
         LIMIT $1 OFFSET $2;`,
         [limit, page]
     )
@@ -74,14 +79,17 @@ async function countRows(nameTable, expresion) {
 
 async function countPromotions(expresion){
     const response = await pool.query(
-        `SELECT DISTINCT count(*)
-        FROM promocion, (SELECT cod_prom
+        `SELECT COUNT(*)
+        FROM promocion, (SELECT DISTINCT cod_prom
             FROM prod_prom, (SELECT cod_prod
                 FROM producto 
                 WHERE LOWER(nombre_prod) LIKE '%${expresion}%'
                 AND (fecha_venc > NOW() OR fecha_venc IS NULL)) as UNO
             WHERE UNO.cod_prod = prod_prom.cod_prod) as DOS
-        WHERE DOS.cod_prom = promocion.cod_prom;`
+        WHERE DOS.cod_prom = promocion.cod_prom
+        AND promocion.fecha_ini <= NOW()
+        AND promocion.fecha_fin >= NOW();
+        `
     )
     return response.rows
 }

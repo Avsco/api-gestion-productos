@@ -6,25 +6,7 @@ const {
     deleteImage,
 } = require('./model')
 
-/*async function GET(req, res) {
-    try {
 
-        const criterio = req.query.criterio
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.limit)
-
-        const response = await getImage(criterio,page,limit)
-
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json({ errorCode: error.code, msg: error.message })
-    }
-}*/
-/*El metodo show nos da 2 opciones para traer imagenes, la primera nos trae todas las imagenes de un producto segun su id
-Su sintaxis es: http://localhost:4000/images/6?cantidad=1 donde el valor de "1" es irrelevante, ya que trae todas las imagenes
-sin importar el valor que se coloque, ya que solo verifica que el campo cantidad tenga un valor en la query URL.
-Caso contrario, si no se coloca el campo cantidad en la query URL, como se muestra a continuacion: http://localhost:4000/images/6
-solamente si traera la primera imagen correspondiente al id del producto seleccionado */ 
 async function SHOW (req, res) {
     try {
         const cod_prod = req.params.id
@@ -44,7 +26,6 @@ async function SHOW (req, res) {
 async function POST (req, res) {
     try {
         const {cod_prod, imagen } = req.body
-        console.log(imagen.substr(12,15))
         if(imagen.substr(11,4) == 'jpeg'){
             var imagen2 = imagen.replace('data:image/jpeg;base64,', '');
         }
@@ -78,9 +59,7 @@ async function PUT (req, res) {
 async function DELETE (req, res) {
     try {
         const id = req.params.id
-        const {num_pic}=req.body
-        if(!(num_pic)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await deleteImage(id,num_pic)
+        await deleteImage(id)
 
         return res.status(200).json('Image deleted')
     } catch (error) {
@@ -89,7 +68,7 @@ async function DELETE (req, res) {
 }
 
 module.exports = {
-    //GET,
+
     SHOW,
     POST,
     PUT,

@@ -2,7 +2,11 @@ const {
     getPromotionById,
     getPromotions,
     getPromotionImage,
-    getProductsForPromotion
+    getProductsForPromotion,
+    createPromotion,
+    addProductsToProm,
+    deletePromotionById,
+    deletePromotionsProductsById
     } = require('./model')
 
 async function GET (req, res){
@@ -48,9 +52,46 @@ async function PRODS (req, res){
     }
 }
 
+async function POST(req,res){
+    try{
+        const{nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom, products}=req.body
+        if(!(nombr_prom && descrip_prom && cantidad_prom && precio_prom && fecha_ini && fecha_fin )) return res.status(400).json({ msg: 'Complete todos los datos' })
+        if(imagen_prom.substr(11,4) == 'jpeg'){
+            var imagen2 = imagen_prom.replace('data:image/jpeg;base64,', '');
+        }
+        else if(imagen_prom.substr(11,3) == 'jpg'){
+            var imagen2 = imagen_prom.replace('data:image/jpg;base64,', '');
+        }else{
+            var imagen2 = imagen_prom.replace('data:image/png;base64,', '');
+        }
+        const idProm = await createPromotion(nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen2)
+        const response = await addProductsToProm(idProm,products) 
+        return res.status(200).json("Hola")
+
+    }catch(error){
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+async function DELETE (req, res) {
+    try {
+       
+        const id = req.params.id
+        const cont = await deletePromotionsProductsById(id)
+        const response = await deletePromotionById(id)
+
+        return res.status(200).json("Hola")
+    } catch (error) {
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+
 module.exports = {
     GET,
     SHOW,
     IMAGE,
-    PRODS
+    PRODS,
+    DELETE,
+    POST
 }
