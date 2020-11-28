@@ -108,11 +108,12 @@ async function getProductClient(criterio,categoria,page,limit){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
-    
-    results.cant = ros.rows
+    let ros;
+
+  
+    ros = {rows: [{count: result1.length}]};
+
+results.cant = ros.rows
 
     return results
 }
@@ -231,11 +232,12 @@ async function getProduct(criterio,categoria,page,limit,filter){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
-    
-    results.cant = ros.rows
+    let ros;
+
+  
+    ros = {rows: [{count: result1.length}]};
+
+   results.cant = ros.rows
 
     return results
 }
