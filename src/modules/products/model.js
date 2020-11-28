@@ -113,7 +113,7 @@ async function getProductClient(criterio,categoria,page,limit){
   
     ros = {rows: [{count: result1.length}]};
 
-results.cant = ros.rows
+    results.cant = ros.rows
 
     return results
 }
