@@ -108,10 +108,11 @@ async function getProductClient(criterio,categoria,page,limit){
        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM producto;"
-    )
-    
+    let ros;
+
+  
+    ros = {rows: [{count: result1.length}]};
+
     results.cant = ros.rows
 
     return results
@@ -242,6 +243,7 @@ async function getProduct(criterio,categoria,page,limit,filter){
 
     let ros;
 
+<<<<<<< HEAD
     if(filter == 1){
         ros = {rows: [{count: result1.length}]};
     }else{
@@ -250,6 +252,12 @@ async function getProduct(criterio,categoria,page,limit,filter){
         )
     }
     results.cant = ros.rows
+=======
+  
+    ros = {rows: [{count: result1.length}]};
+
+   results.cant = ros.rows
+>>>>>>> feature-bd
 
     return results
 }
