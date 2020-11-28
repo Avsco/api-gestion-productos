@@ -5,25 +5,24 @@ async function getDiscountClient(criterio,categoria,page,limit){
     if (categoria==''){
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-            
-	    		ORDER BY cod_prod;`,
+                `SELECT *  FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())         
+                ORDER BY p.cod_prod;`,
             )
             var result1 = response.rows
         }else{
              if(criterio == 'fecha_adic'){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-                ORDER BY fecha_adic desc;`,
+                `SELECT *  FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())         
+                ORDER BY p.fecha_adic desc;`,
             )
             var result1 = response.rows
         }else{
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
-                ORDER BY `+criterio+`;`,
+                `SELECT *  FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())         
+                ORDER BY p.`+criterio+`;`,
             )
             var result1 = response.rows
         }
@@ -31,27 +30,27 @@ async function getDiscountClient(criterio,categoria,page,limit){
     }else{
         if(criterio == ''){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `SELECT * FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
-	    		ORDER BY cod_prod;`, [categoria]
+                ORDER BY p.cod_prod;`, [categoria]
             )
             var result1 = response.rows
         }else{
              if(criterio == 'fecha_adic'){
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `SELECT * FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
-                ORDER BY fecha_adic desc;`, [categoria]
+                ORDER BY p.fecha_adic desc;`, [categoria]
             )
             var result1 = response.rows
         }else{
             const response = await pool.query(
-                `SELECT p.* FROM producto p,(select cod_prod from descuento ) 
-                as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
+                `SELECT * FROM producto p, descuento d
+                where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())
                 and p.cod_cat in (SELECT cod_cat from categoria where nombre_cat=$1)
-                ORDER BY `+criterio+`;`, [categoria]
+                ORDER BY p.`+criterio+`;`, [categoria]
             )
             var result1 = response.rows
         }
@@ -78,11 +77,10 @@ async function getDiscountClient(criterio,categoria,page,limit){
        }
     }
 
-    const ros = await pool.query(
-        `SELECT count(*) FROM producto p,(select cod_prod from descuento ) 
-        as uno where (uno.cod_prod=p.cod_prod) and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())`
-    )
-    
+    let ros;
+
+    ros = {rows: [{count: result1.length}]};
+
     results.cant = ros.rows
 
     return results
@@ -165,12 +163,11 @@ async function getDiscount(criterio,categoria,page,limit){
        }
     }
 
-    const ros = await pool.query(
-        `SELECT count(*) FROM producto p,(select cod_prod from descuento ) 
-        as uno where (uno.cod_prod=p.cod_prod)`
-    )
-    
-    results.cant = ros.rows
+    let ros;
+
+    ros = {rows: [{count: result1.length}]};
+
+   results.cant = ros.rows
 
     return results
 }
