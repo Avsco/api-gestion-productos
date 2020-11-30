@@ -5,23 +5,24 @@ const {
     createDiscount,
     updateDiscount,
     deleteDiscount,
-    } = require('./model')
+} = require('./model')
 
 async function GET(req, res) {
     try {
         const criterio = req.query.criterio
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
-        var comp = "\""+"\""
+        var comp = '"' + '"'
         var categoria = req.query.categoria
- 
-        if ((categoria==comp)||(categoria==undefined) ){categoria=''}
-        var response 
-        if(req.query.usr=='1234'){
 
-            response = await getDiscountClient(criterio,categoria,page,limit)
-        }else{
-            response = await getDiscount(criterio,categoria,page,limit)
+        if (categoria == comp || categoria == undefined) {
+            categoria = ''
+        }
+        var response
+        if (req.query.usr == '1234') {
+            response = await getDiscountClient(criterio, categoria, page, limit)
+        } else {
+            response = await getDiscount(criterio, categoria, page, limit)
         }
 
         return res.status(200).json(response)
@@ -30,7 +31,7 @@ async function GET(req, res) {
     }
 }
 
-async function SHOW (req, res) {
+async function SHOW(req, res) {
     try {
         const cod_prod = req.params.id
         const response = await getDiscountById(cod_prod)
@@ -42,10 +43,11 @@ async function SHOW (req, res) {
     }
 }
 
-async function POST (req, res) {
+async function POST(req, res) {
     try {
         const { cod_prod, porcentaje, cantidad_req } = req.body
-        if(!(cod_prod && porcentaje && cantidad_req)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        if (!(cod_prod && porcentaje && cantidad_req))
+            return res.status(400).json({ msg: 'Complete todos los datos' })
         const response = await createDiscount(cod_prod, porcentaje, cantidad_req)
 
         return res.status(200).json(response)
@@ -54,11 +56,12 @@ async function POST (req, res) {
     }
 }
 
-async function PUT (req, res) {
+async function PUT(req, res) {
     try {
         const id = req.params.id
         const { porcentaje, cantidad_req } = req.body
-        if(!( porcentaje && cantidad_req)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        if (!(porcentaje && cantidad_req))
+            return res.status(400).json({ msg: 'Complete todos los datos' })
 
         await updateDiscount(id, porcentaje, cantidad_req)
 
@@ -68,7 +71,7 @@ async function PUT (req, res) {
     }
 }
 
-async function DELETE (req, res) {
+async function DELETE(req, res) {
     try {
         const id = req.params.id
         await deleteDiscount(id)
@@ -78,7 +81,6 @@ async function DELETE (req, res) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
 }
-
 
 module.exports = {
     GET,

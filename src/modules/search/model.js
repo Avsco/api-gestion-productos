@@ -1,19 +1,17 @@
 const pool = require('../../database')
 
-async function search(expresion, table, page, limit){
+async function search(expresion, table, page, limit) {
     expresion = expresion.toLowerCase()
     page = (page - 1) * limit
     const response = {}
     try {
-        if(table === 'producto')
-            response.results = await searchProducts(expresion, page, limit)
-        else if(table === 'descuento')
+        if (table === 'producto') response.results = await searchProducts(expresion, page, limit)
+        else if (table === 'descuento')
             response.results = await searchDiscounts(expresion, page, limit)
-        else if(table === 'promocion')
+        else if (table === 'promocion')
             response.results = await searchPromotions(expresion, page, limit)
-        else
-            throw new Error('The table not exist')
-            
+        else throw new Error('The table not exist')
+
         response.cant = await countRows(table, expresion)
         return response
     } catch (error) {
@@ -21,7 +19,7 @@ async function search(expresion, table, page, limit){
     }
 }
 
-async function searchProducts(expresion, page, limit){
+async function searchProducts(expresion, page, limit) {
     const response = await pool.query(
         `SELECT * 
         FROM producto 
@@ -33,7 +31,7 @@ async function searchProducts(expresion, page, limit){
     return response.rows
 }
 
-async function searchDiscounts(expresion, page, limit){
+async function searchDiscounts(expresion, page, limit) {
     const response = await pool.query(
         `SELECT *
         FROM descuento, (SELECT cod_prod, nombre_prod, descripcion, precio_unid, fecha_adic
@@ -47,7 +45,7 @@ async function searchDiscounts(expresion, page, limit){
     return response.rows
 }
 
-async function searchPromotions(expresion, page, limit){
+async function searchPromotions(expresion, page, limit) {
     const response = await pool.query(
         `SELECT DISTINCT promocion.cod_prom, promocion.nombr_prom
         FROM promocion, (SELECT cod_prom
@@ -64,15 +62,12 @@ async function searchPromotions(expresion, page, limit){
 }
 
 async function countRows(nameTable, expresion) {
-   if(nameTable == 'promocion') 
-    return countPromotions(expresion)
-   else if(nameTable == 'descuento') 
-    return countDiscounts(expresion)
-   else if(nameTable == 'producto') 
-    return countProducts(expresion)
+    if (nameTable == 'promocion') return countPromotions(expresion)
+    else if (nameTable == 'descuento') return countDiscounts(expresion)
+    else if (nameTable == 'producto') return countProducts(expresion)
 }
 
-async function countPromotions(expresion){
+async function countPromotions(expresion) {
     const response = await pool.query(
         `SELECT DISTINCT count(*)
         FROM promocion, (SELECT cod_prom
@@ -86,7 +81,7 @@ async function countPromotions(expresion){
     return response.rows
 }
 
-async function countDiscounts(expresion){
+async function countDiscounts(expresion) {
     const response = await pool.query(
         `SELECT count(*)
         FROM descuento, (SELECT cod_prod
@@ -98,7 +93,7 @@ async function countDiscounts(expresion){
     return response.rows
 }
 
-async function countProducts(expresion){
+async function countProducts(expresion) {
     const response = await pool.query(
         `SELECT count(*) 
         FROM producto 
@@ -108,6 +103,6 @@ async function countProducts(expresion){
     return response.rows
 }
 
-module.exports = { 
-    search
+module.exports = {
+    search,
 }

@@ -5,7 +5,7 @@ const discounts = require('./discounts')
 const search = require('./search')
 const categories = require('./categories')
 
-function router (app) {
+function router(app) {
     app.use(images)
     app.use(products)
     app.use(promos)
