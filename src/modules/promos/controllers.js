@@ -7,7 +7,8 @@ const {
     createPromotion,
     addProductsToProm,
     deletePromotionById,
-    deletePromotionsProductsById
+    deletePromotionsProductsById,
+    updatePromotion
     } = require('./model')
 
 async function GET (req, res){
@@ -76,6 +77,18 @@ async function POST(req,res){
         return res.status(200).json("Hola")
 
     }catch(error){
+        return res.status(500).json({ errorCode: error.code, msg: error.message })
+    }
+}
+
+async function PUT (req, res) {
+    try {
+        const id = req.params.id
+        const { nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom } = req.body
+        await updatePromotion(id, nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom)
+
+        return res.status(200).json('Promotion updated')
+    } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
 }
