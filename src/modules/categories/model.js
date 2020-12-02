@@ -2,7 +2,7 @@ const { response } = require('express')
 const pool = require('../../database')
 
 async function getCategory() {
-    const response = await pool.query(`select nombre_cat from categoria`)
+    const response = await pool.query(`select nombre_cat,cod_cat from categoria`)
     var result1 = response.rows
 
     return result1

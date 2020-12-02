@@ -8,6 +8,10 @@ const {
     deleteProduct,
     getProductsWithDiscount,
     getPromotionsForProduct,
+    deleteImageFromProduct,
+    deleteProductsDiscounts,
+    deleteProductsFromPromotions,
+    deleteFromIntermediateTable
 } = require('./model')
 
 /*http://localhost:4000/products?page=1&limit=20&filter=1 trae todos los productos que pueden tener
@@ -117,6 +121,14 @@ async function PUT(req, res) {
 async function DELETE(req, res) {
     try {
         const id = req.params.id
+        await deleteImageFromProduct(id)
+
+        await deleteProductsDiscounts(id)
+        
+        await deleteFromIntermediateTable(id)
+
+        await deleteProductsFromPromotions()
+
         await deleteProduct(id)
 
         return res.status(200).json('Product deleted')

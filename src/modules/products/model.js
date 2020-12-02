@@ -328,6 +328,31 @@ async function deleteProduct(cod_prod) {
     return response.command
 }
 
+async function deleteImageFromProduct(cod_prod) {
+    const response = await pool.query('DELETE FROM imagen WHERE cod_prod = $1;', [cod_prod])
+    return response.command
+}
+
+async function deleteProductsDiscounts(cod_prod) {
+    const response = await pool.query('DELETE FROM descuento WHERE cod_prod = $1;', [cod_prod])
+    return response.command
+}
+
+async function deleteProductsFromPromotions() {
+  
+        const response = await pool.query('delete from promocion where cod_prom not in (SELECT cod_prom FROM prod_prom);')
+    
+    return response.command
+}
+
+async function deleteFromIntermediateTable(cod_prod) {
+    
+        const response = await pool.query(
+            'DELETE FROM prod_prom  WHERE cod_prom IN (SELECT cod_prom FROM prod_prom where cod_prod = $1);',[cod_prod])
+    
+    return response.command
+}
+
 module.exports = {
     getProduct,
     getProductClient,
@@ -338,4 +363,8 @@ module.exports = {
     deleteProduct,
     getProductsWithDiscount,
     getPromotionsForProduct,
+    deleteImageFromProduct,
+    deleteProductsDiscounts,
+    deleteFromIntermediateTable,
+    deleteProductsFromPromotions,
 }
