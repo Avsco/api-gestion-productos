@@ -73,11 +73,11 @@ async function POST(req, res) {
         if (!(nombr_prom && descrip_prom && cantidad_prom && precio_prom && fecha_ini && fecha_fin))
             return res.status(400).json({ msg: 'Complete todos los datos' })
         if (imagen_prom.substr(11, 4) == 'jpeg') {
-            let imagen2 = imagen_prom.replace('data:image/jpeg;base64,', '')
+            var imagen2 = imagen_prom.replace('data:image/jpeg;base64,', '')
         } else if (imagen_prom.substr(11, 3) == 'jpg') {
-            let imagen2 = imagen_prom.replace('data:image/jpg;base64,', '')
+            var imagen2 = imagen_prom.replace('data:image/jpg;base64,', '')
         } else {
-            let imagen2 = imagen_prom.replace('data:image/png;base64,', '')
+            var imagen2 = imagen_prom.replace('data:image/png;base64,', '')
         }
         const idProm = await createPromotion(
             nombr_prom,

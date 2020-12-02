@@ -13,7 +13,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                 where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
                 ORDER BY producto.cod_prod;`
             )
-            let result1 = response.rows
+            var result1 = response.rows
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -25,7 +25,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                     where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
                     ORDER BY producto.fecha_adic desc;`
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             } else {
                 const response = await pool.query(
                     `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
@@ -38,7 +38,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                         criterio +
                         `;`
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             }
         }
     } else {
@@ -54,7 +54,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                 ORDER BY producto.cod_prod;`,
                 [categoria]
             )
-            let result1 = response.rows
+            var result1 = response.rows
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -68,7 +68,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                     order by fecha_adic desc`,
                     [categoria]
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             } else {
                 const response = await pool.query(
                     `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
@@ -83,7 +83,7 @@ async function getProductClient(criterio, categoria, page, limit) {
                         ``,
                     [categoria]
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             }
         }
     }

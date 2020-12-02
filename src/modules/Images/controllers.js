@@ -20,11 +20,11 @@ const { getImageById1, getImageByIdAll, createImage, updateImage, deleteImage } 
         try {
             const { cod_prod, imagen } = req.body
             if (imagen.substr(11, 4) == 'jpeg') {
-                let imagen2 = imagen.replace('data:image/jpeg;base64,', '')
+                var imagen2 = imagen.replace('data:image/jpeg;base64,', '')
             } else if (imagen.substr(11, 3) == 'jpg') {
-                let imagen2 = imagen.replace('data:image/jpg;base64,', '')
+                var imagen2 = imagen.replace('data:image/jpg;base64,', '')
             } else {
-                let imagen2 = imagen.replace('data:image/png;base64,', '')
+                var imagen2 = imagen.replace('data:image/png;base64,', '')
             }
             if (!(cod_prod && imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
             await createImage(cod_prod, imagen2)

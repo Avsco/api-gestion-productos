@@ -31,7 +31,7 @@ async function getPromotionsClient(criterio, page, limit) {
             FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
             ORDER BY cod_prom;`
         )
-        let result1 = response.rows
+        var result1 = response.rows
     } else {
         if (criterio == 'fecha_ini') {
             const response = await pool.query(
@@ -39,7 +39,7 @@ async function getPromotionsClient(criterio, page, limit) {
                 from promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
                 order by fecha_ini desc`
             )
-            let result1 = response.rows
+            var result1 = response.rows
         } else {
             const response = await pool.query(
                 `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
@@ -48,7 +48,7 @@ async function getPromotionsClient(criterio, page, limit) {
                     criterio +
                     `;`
             )
-            let result1 = response.rows
+            var result1 = response.rows
         }
     }
     const startIndex = (page - 1) * limit

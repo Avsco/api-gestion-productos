@@ -9,7 +9,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                 where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())         
                 ORDER BY p.cod_prod;`
             )
-            let result1 = response.rows
+            var result1 = response.rows
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -17,7 +17,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                 where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())         
                 ORDER BY p.fecha_adic desc;`
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             } else {
                 const response = await pool.query(
                     `SELECT *  FROM producto p, descuento d
@@ -26,7 +26,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                         criterio +
                         `;`
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             }
         }
     } else {
@@ -38,7 +38,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                 ORDER BY p.cod_prod;`,
                 [categoria]
             )
-            let result1 = response.rows
+            var result1 = response.rows
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -48,7 +48,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                 ORDER BY p.fecha_adic desc;`,
                     [categoria]
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             } else {
                 const response = await pool.query(
                     `SELECT * FROM producto p, descuento d
@@ -59,7 +59,7 @@ async function getDiscountClient(criterio, categoria, page, limit) {
                         `;`,
                     [categoria]
                 )
-                let result1 = response.rows
+                var result1 = response.rows
             }
         }
     }
