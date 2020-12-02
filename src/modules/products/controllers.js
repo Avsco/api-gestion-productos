@@ -19,14 +19,14 @@ const {
 
 async function GET(req, res) {
     try {
-        var response
+        let response
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
         const filter = req.query.filter
         const criterio = req.query.criterio
 
-        var comp = '"' + '"'
-        var categoria = req.query.categoria
+        let comp = '"' + '"'
+        let categoria = req.query.categoria
 
         if (categoria == comp || categoria == undefined) {
             categoria = ''

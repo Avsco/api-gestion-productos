@@ -16,7 +16,7 @@ async function GET(req, res) {
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
 
-        var response
+        let response
         if (req.query.usr == '1234') {
             response = await getPromotionsClient(criterio, page, limit)
         } else {
@@ -73,11 +73,11 @@ async function POST(req, res) {
         if (!(nombr_prom && descrip_prom && cantidad_prom && precio_prom && fecha_ini && fecha_fin))
             return res.status(400).json({ msg: 'Complete todos los datos' })
         if (imagen_prom.substr(11, 4) == 'jpeg') {
-            var imagen2 = imagen_prom.replace('data:image/jpeg;base64,', '')
+            let imagen2 = imagen_prom.replace('data:image/jpeg;base64,', '')
         } else if (imagen_prom.substr(11, 3) == 'jpg') {
-            var imagen2 = imagen_prom.replace('data:image/jpg;base64,', '')
+            let imagen2 = imagen_prom.replace('data:image/jpg;base64,', '')
         } else {
-            var imagen2 = imagen_prom.replace('data:image/png;base64,', '')
+            let imagen2 = imagen_prom.replace('data:image/png;base64,', '')
         }
         const idProm = await createPromotion(
             nombr_prom,

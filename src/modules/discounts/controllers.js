@@ -7,29 +7,29 @@ const {
     deleteDiscount,
 } = require('./model')
 
-async function GET(req, res) {
-    try {
-        const criterio = req.query.criterio
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.limit)
-        var comp = '"' + '"'
-        var categoria = req.query.categoria
+    async function GET(req, res) {
+        try {
+            const criterio = req.query.criterio
+            const page = parseInt(req.query.page)
+            const limit = parseInt(req.query.limit)
+            let comp = '"' + '"'
+            let categoria = req.query.categoria
 
-        if (categoria == comp || categoria == undefined) {
-            categoria = ''
-        }
-        var response
-        if (req.query.usr == '1234') {
-            response = await getDiscountClient(criterio, categoria, page, limit)
-        } else {
-            response = await getDiscount(criterio, categoria, page, limit)
-        }
+            if (categoria == comp || categoria == undefined) {
+                categoria = ''
+            }
+            let response
+            if (req.query.usr == '1234') {
+                response = await getDiscountClient(criterio, categoria, page, limit)
+            } else {
+                response = await getDiscount(criterio, categoria, page, limit)
+            }
 
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json({ errorCode: error.code, msg: error.message })
+            return res.status(200).json(response)
+        } catch (error) {
+            return res.status(500).json({ errorCode: error.code, msg: error.message })
+        }
     }
-}
 
 async function SHOW(req, res) {
     try {
