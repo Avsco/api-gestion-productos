@@ -205,6 +205,11 @@ async function addProductsToProm(idProm, products){
     }
 }
 
+async function deleteProductsFromProm(idProm) {
+    await pool.query(`DELETE FROM prod_prom where cod_prom=$1;`, [idProm])
+    return response.command
+}
+
 module.exports = {
     getPromotionById,
     getPromotionsClient,
@@ -216,5 +221,5 @@ module.exports = {
     deletePromotionById,
     deletePromotionsProductsById,
     updatePromotion,
- 
+    deleteProductsFromProm
 }
