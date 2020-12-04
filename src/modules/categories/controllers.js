@@ -4,11 +4,10 @@ const {
     createCategory,
     updateCategory,
     deleteCategory,
-    } = require('./model')
+} = require('./model')
 
 async function GET(req, res) {
     try {
-
         const response = await getCategory()
 
         return res.status(200).json(response)
@@ -17,7 +16,7 @@ async function GET(req, res) {
     }
 }
 
-async function SHOW (req, res) {
+async function SHOW(req, res) {
     try {
         const cod_prod = req.params.id
         const response = await getCategoryById(cod_prod)
@@ -29,10 +28,10 @@ async function SHOW (req, res) {
     }
 }
 
-async function POST (req, res) {
+async function POST(req, res) {
     try {
         const { nombre_cat } = req.body
-        if(!(nombre_cat)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        if (!nombre_cat) return res.status(400).json({ msg: 'Complete todos los datos' })
         const response = await createCategory(nombre_cat)
 
         return res.status(200).json(response)
@@ -41,11 +40,11 @@ async function POST (req, res) {
     }
 }
 
-async function PUT (req, res) {
+async function PUT(req, res) {
     try {
         const id = req.params.id
-        const {nombre_cat} = req.body
-        if(!( nombre_cat)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        const { nombre_cat } = req.body
+        if (!nombre_cat) return res.status(400).json({ msg: 'Complete todos los datos' })
 
         await updateCategory(id, nombre_cat)
 
@@ -55,7 +54,7 @@ async function PUT (req, res) {
     }
 }
 
-async function DELETE (req, res) {
+async function DELETE(req, res) {
     try {
         const id = req.params.id
         await deleteCategory(id)
@@ -65,7 +64,6 @@ async function DELETE (req, res) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
     }
 }
-
 
 module.exports = {
     GET,

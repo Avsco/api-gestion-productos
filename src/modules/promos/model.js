@@ -1,59 +1,52 @@
 const { response } = require('express')
 const pool = require('../../database')
 
-async function getPromotionById(cod_prom){
-    const res=await pool.query(
+async function getPromotionById(cod_prom) {
+    const res = await pool.query(
         `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin
         from promocion
         where cod_prom=$1;`,
         [cod_prom]
     )
-    response.datos=res.rows;
-    return response;
+    response.datos = res.rows
+    return response
 }
 
-async function deletePromotionById(cod_prom){
-    const res=await pool.query(
-        `delete from promocion where cod_prom=$1;`,
-        [cod_prom]
-    )
-    response.datos=res.rows;
-    return response;
+async function deletePromotionById(cod_prom) {
+    const res = await pool.query(`delete from promocion where cod_prom=$1;`, [cod_prom])
+    response.datos = res.rows
+    return response
 }
 
-async function deletePromotionsProductsById(cod_prom){
-    const res=await pool.query(
-        `delete from prod_prom where cod_prom=$1;`,
-        [cod_prom]
-    )
-    response.datos=res.rows;
-    return response;
+async function deletePromotionsProductsById(cod_prom) {
+    const res = await pool.query(`delete from prod_prom where cod_prom=$1;`, [cod_prom])
+    response.datos = res.rows
+    return response
 }
 
-
-async function getPromotionsClient(criterio, page, limit){
-    if(criterio == ''){
+async function getPromotionsClient(criterio, page, limit) {
+    if (criterio == '') {
         const response = await pool.query(
             `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
             FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-            ORDER BY cod_prom;`,
+            ORDER BY cod_prom;`
         )
         var result1 = response.rows
-        
-    }else{
-         if(criterio == 'fecha_ini'){
+    } else {
+        if (criterio == 'fecha_ini') {
             const response = await pool.query(
                 `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
                 from promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-                order by fecha_ini desc`,
+                order by fecha_ini desc`
             )
-        var result1 = response.rows
-        
-        }else{
+            var result1 = response.rows
+        } else {
             const response = await pool.query(
                 `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
                 FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-                ORDER BY `+criterio+`;`,
+                ORDER BY ` +
+                    criterio +
+                    `;`
             )
             var result1 = response.rows
         }
@@ -61,55 +54,54 @@ async function getPromotionsClient(criterio, page, limit){
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
     const results = {}
-    
 
-    results.results = result1.slice(startIndex,endIndex)
+    results.results = result1.slice(startIndex, endIndex)
 
-    if(endIndex < result1.length ){
+    if (endIndex < result1.length) {
         results.next = {
             page: page + 1,
-            limit : limit
+            limit: limit,
         }
     }
-    if(startIndex > 0){
+    if (startIndex > 0) {
         results.previus = {
             page: page - 1,
-            limit : limit
-       }
+            limit: limit,
+        }
     }
 
     const ros = await pool.query(
         "SELECT count(*) FROM promocion where (cantidad_prom>'0')and(fecha_fin>NOW());"
     )
-    
+
     results.cant = ros.rows
 
     return results
 }
 
-async function getPromotions(criterio, page, limit){
-    if(criterio == ''){
+async function getPromotions(criterio, page, limit) {
+    if (criterio == '') {
         const response = await pool.query(
             `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
             FROM promocion 
-            ORDER BY cod_prom;`,
+            ORDER BY cod_prom;`
         )
         var result1 = response.rows
-        
-    }else{
-         if(criterio == 'fecha_inic'){
+    } else {
+        if (criterio == 'fecha_inic') {
             const response = await pool.query(
                 `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
                 from promocion 
-                order by fecha_ini desc`,
+                order by fecha_ini desc`
             )
-        var result1 = response.rows
-        
-        }else{
+            var result1 = response.rows
+        } else {
             const response = await pool.query(
                 `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
                 FROM promocion 
-                ORDER BY `+criterio+`;`,
+                ORDER BY ` +
+                    criterio +
+                    `;`
             )
             var result1 = response.rows
         }
@@ -117,84 +109,86 @@ async function getPromotions(criterio, page, limit){
     const startIndex = (page - 1) * limit
     const endIndex = page * limit
     const results = {}
-    
 
-    results.results = result1.slice(startIndex,endIndex)
+    results.results = result1.slice(startIndex, endIndex)
 
-    if(endIndex < result1.length ){
+    if (endIndex < result1.length) {
         results.next = {
             page: page + 1,
-            limit : limit
+            limit: limit,
         }
     }
-    if(startIndex > 0){
+    if (startIndex > 0) {
         results.previus = {
             page: page - 1,
-            limit : limit
-       }
+            limit: limit,
+        }
     }
 
-    const ros = await pool.query(
-        "SELECT count(*) FROM promocion;"
-    )
-    
+    const ros = await pool.query('SELECT count(*) FROM promocion;')
+
     results.cant = ros.rows
 
     return results
 }
 
-
-async function getPromotionImage(cod_prom){
-    const res=await pool.query(
+async function getPromotionImage(cod_prom) {
+    const res = await pool.query(
         `select imagen_prom
         from promocion
         where cod_prom=$1`,
         [cod_prom]
     )
-    response.datos=res.rows;
-    return response;
+    response.datos = res.rows
+    return response
 }
 
-async function getProductsForPromotion (cod_prom){
+async function getProductsForPromotion(cod_prom) {
     const res = await pool.query(
         `select p.nombre_prod, p.precio_unid, p.cod_prod
         from producto p, prod_prom c
         where c.cod_prom=$1 and c.cod_prod=p.cod_prod;`,
         [cod_prom]
     )
-    response.datos=res.rows
+    response.datos = res.rows
     return response
 }
 
-async function createPromotion(nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom){
+async function createPromotion(
+    nombr_prom,
+    descrip_prom,
+    cantidad_prom,
+    precio_prom,
+    fecha_ini,
+    fecha_fin,
+    imagen_prom
+) {
     const res = await pool.query(
         `INSERT INTO promocion(
             nombr_prom, descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin, imagen_prom)
             VALUES ($1, $2, $3, $4, $5, $6, $7);`,
-        [nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom]
+        [nombr_prom, descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin, imagen_prom]
     )
-    const idProm = await getNewProm(nombr_prom)    
-        return idProm
+    const idProm = await getNewProm(nombr_prom)
+    return idProm
 }
 
-async function getNewProm(nombr_prom){
-    const res = await pool.query(
-        `select cod_prom from promocion where nombr_prom=$1;`
-        ,[nombr_prom]
-    )
+async function getNewProm(nombr_prom) {
+    const res = await pool.query(`select cod_prom from promocion where nombr_prom=$1;`, [
+        nombr_prom,
+    ])
     return res.rows[0].cod_prom
 }
 
-async function addProductsToProm(idProm, products){
+async function addProductsToProm(idProm, products) {
     for (const key in products) {
         if (products.hasOwnProperty(key)) {
-            const element = products[key];
+            const element = products[key]
             await pool.query(
-                `insert into prod_prom(cod_prod, cod_prom, cant_prod) values($1,$2,$3);`
-                ,[key,idProm,element[0]]
+                `insert into prod_prom(cod_prod, cod_prom, cant_prod) values($1,$2,$3);`,
+                [key, idProm, element[0]]
             )
         }
-        
     }
 }
 
@@ -207,7 +201,5 @@ module.exports = {
     createPromotion,
     addProductsToProm,
     deletePromotionById,
-    deletePromotionsProductsById
-
- 
+    deletePromotionsProductsById,
 }
