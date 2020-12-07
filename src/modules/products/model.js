@@ -2,7 +2,6 @@ const { response } = require('express')
 const pool = require('../../database')
 
 async function getProductClient(criterio, categoria, page, limit) {
-
     if (categoria == '') {
         if (criterio == '') {
             const response = await pool.query(
@@ -12,10 +11,9 @@ async function getProductClient(criterio, categoria, page, limit) {
                 LEFT JOIN descuento
                 ON producto.cod_prod = descuento.cod_prod
                 where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
-                ORDER BY producto.cod_prod;`,
+                ORDER BY producto.cod_prod;`
             )
             var result1 = response.rows
-
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -25,10 +23,9 @@ async function getProductClient(criterio, categoria, page, limit) {
                     LEFT JOIN descuento
                     ON producto.cod_prod = descuento.cod_prod
                     where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
-                    ORDER BY producto.fecha_adic desc;`,
+                    ORDER BY producto.fecha_adic desc;`
                 )
                 var result1 = response.rows
-
             } else {
                 const response = await pool.query(
                     `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
@@ -54,10 +51,10 @@ async function getProductClient(criterio, categoria, page, limit) {
                 ON producto.cod_prod = descuento.cod_prod
                 where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
                 and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
-                ORDER BY producto.cod_prod;`, [categoria]
+                ORDER BY producto.cod_prod;`,
+                [categoria]
             )
             var result1 = response.rows
-
         } else {
             if (criterio == 'fecha_adic') {
                 const response = await pool.query(
@@ -68,10 +65,10 @@ async function getProductClient(criterio, categoria, page, limit) {
                     ON producto.cod_prod = descuento.cod_prod
                     where (producto.cantidad>'0' or producto.cantidad is null) and (fecha_venc>NOW()or fecha_venc is NULL)
                     and cod_cat IN (SELECT cod_cat from categoria where nombre_cat=$1)
-                    order by fecha_adic desc`, [categoria]
+                    order by fecha_adic desc`,
+                    [categoria]
                 )
                 var result1 = response.rows
-
             } else {
                 const response = await pool.query(
                     `SELECT producto.cod_prod,cod_cat,nombre_prod,descripcion,precio_unid,peso,
@@ -108,7 +105,7 @@ async function getProductClient(criterio, categoria, page, limit) {
         }
     }
 
-    let ros;
+    let ros
 
 
     ros = { rows: [{ count: result1.length }] };
@@ -216,7 +213,6 @@ async function getProduct(criterio, categoria, page, limit, filter) {
             }
 
         }
-
     }
 
     const startIndex = (page - 1) * limit
@@ -239,7 +235,7 @@ async function getProduct(criterio, categoria, page, limit, filter) {
         }
     }
 
-    let ros;
+    let ros
 
 
     ros = { rows: [{ count: result1.length }] };
@@ -270,7 +266,6 @@ async function getProductsWithDiscount() {
     response.datos = res.rows
     return response
 }
-
 
 async function getPromotionsForProduct(cod_prod) {
     const res = await pool.query(
@@ -318,9 +313,32 @@ async function updateProduct(cod_prod, nombre_prod, descripcion, precio_unid, pe
 }
 
 async function deleteProduct(cod_prod) {
-    const response = await pool.query(
-        'DELETE FROM producto WHERE cod_prod = $1;', [cod_prod]
-    )
+    const response = await pool.query('DELETE FROM producto WHERE cod_prod = $1;', [cod_prod])
+    return response.command
+}
+
+async function deleteImageFromProduct(cod_prod) {
+    const response = await pool.query('DELETE FROM imagen WHERE cod_prod = $1;', [cod_prod])
+    return response.command
+}
+
+async function deleteProductsDiscounts(cod_prod) {
+    const response = await pool.query('DELETE FROM descuento WHERE cod_prod = $1;', [cod_prod])
+    return response.command
+}
+
+async function deleteProductsFromPromotions() {
+  
+        const response = await pool.query('delete from promocion where cod_prom not in (SELECT cod_prom FROM prod_prom);')
+    
+    return response.command
+}
+
+async function deleteFromIntermediateTable(cod_prod) {
+    
+        const response = await pool.query(
+            'DELETE FROM prod_prom  WHERE cod_prom IN (SELECT cod_prom FROM prod_prom where cod_prod = $1);',[cod_prod])
+    
     return response.command
 }
 
@@ -333,5 +351,9 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getProductsWithDiscount,
-    getPromotionsForProduct
+    getPromotionsForProduct,
+    deleteImageFromProduct,
+    deleteProductsDiscounts,
+    deleteFromIntermediateTable,
+    deleteProductsFromPromotions,
 }
