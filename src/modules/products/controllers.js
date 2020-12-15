@@ -1,3 +1,4 @@
+const { createImage } = require('../Images/model')
 const {
     getProduct,
     getProductClient,
@@ -92,26 +93,10 @@ async function POST(req, res) {
 async function PUT(req, res) {
     try {
         const id = req.params.id
-        const {
-            nombre_prod,
-            descripcion,
-            precio_unid,
-            peso,
-            unidad_med,
-            fecha_venc,
-            cantidad,
-        } = req.body
-        await updateProduct(
-            id,
-            nombre_prod,
-            descripcion,
-            precio_unid,
-            peso,
-            unidad_med,
-            fecha_venc,
-            cantidad
-        )
-
+        const {nombre_prod,descripcion,categoria, precio_unid, peso,unidad_med,fecha_venc, cantidad} = req.body
+        if(!(nombre_prod&&descripcion&&categoria&&precio_unid)) return res.status(400).json({ msg: 'Complete todos los datos' })
+        await categoryManage(categoria)
+        const result = await updateProduct(id,nombre_prod,descripcion,categoria,precio_unid,peso,unidad_med,fecha_venc,cantidad)
         return res.status(200).json('Product updated')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })

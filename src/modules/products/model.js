@@ -305,9 +305,12 @@ async function getIdByName(nombre_prod) {
     return response.rows
 }
 
-async function updateProduct(cod_prod, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad) {
+async function updateProduct(cod_prod, nombre_prod, descripcion,categoria, precio_unid, peso, unidad_med, fecha_venc, cantidad) {
     const response = await pool.query(
-        'UPDATE producto SET nombre_prod=$2, descripcion=$3, precio_unid=$4, peso=$5, unidad_med=$6, fecha_venc=$7, cantidad=$8 WHERE cod_prod=$1;', [cod_prod, nombre_prod, descripcion, precio_unid, peso, unidad_med, fecha_venc, cantidad]
+        `UPDATE producto SET cod_cat=(select cod_cat from categoria where nombre_cat=$4), 
+        nombre_prod=$2, descripcion=$3, precio_unid=$5, peso=$6, unidad_med=$7, fecha_venc=$8, cantidad=$9 
+        WHERE cod_prod=$1`, 
+        [cod_prod, nombre_prod, descripcion, categoria, precio_unid, peso, unidad_med, fecha_venc, cantidad]
     )
     return response.command
 }
