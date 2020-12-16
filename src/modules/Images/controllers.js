@@ -40,8 +40,21 @@ async function PUT(req, res) {
         const id = req.params.id
         const { num_pic, imagen } = req.body
         if (!(num_pic, imagen)) return res.status(400).json({ msg: 'Complete todos los datos' })
-        await updateImage(id, num_pic, imagen)
-
+        await deleteImage(id)
+        imagen.forEach(async element => {
+            if (element.substr(11, 4) == 'jpeg') {
+                 element = element.replace('data:image/jpeg;base64,', '')
+            } else if (element.substr(11, 3) == 'jpg') {
+                 element = element.replace('data:image/jpg;base64,', '')
+            } else {
+                 if(element.substr(11,9)=='[jpg/png]'){
+                    element = element.replace('data:image/[jpg/png];base64,', '')
+                 }else{
+                    element = element.replace('data:image/png;base64,', '')
+                 }
+            }
+            await createImage(id,element)
+        });
         return res.status(200).json('Image updated')
     } catch (error) {
         return res.status(500).json({ errorCode: error.code, msg: error.message })
