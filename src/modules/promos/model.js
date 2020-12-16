@@ -8,24 +8,29 @@ async function getPromotionById(cod_prom) {
         where cod_prom=$1;`,
         [cod_prom]
     )
-    response.datos = res.rows
+    const datos = await pool.query(
+        `select *
+        from prod_prom
+        where prod_prom.cod_prom=$1`,
+        [cod_prom]
+    )
+    response.datos = res.rows 
+    response.prod =  datos.rows
     return response
 }
 
-async function updatePromotion(cod_prom,nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom){
-    const res=await pool.query(
-        'UPDATE promocion SET nombr_prom=$2, descrip_prom=$3, cantidad_prom=$4, precio_prom=$5, fecha_ini=$6, fecha_fin=$7, imagen_prom=$8 WHERE cod_prom=$1;', [cod_prom,nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom]
+async function updatePromotion(cod_prom,nombr_prom,descrip_prom,cantidad_prom,precio_prom,fecha_ini,fecha_fin,imagen_prom) {
+    const res = await pool.query(
+        'UPDATE promocion SET nombr_prom=$2, descrip_prom=$3, cantidad_prom=$4, precio_prom=$5, fecha_ini=$6, fecha_fin=$7, imagen_prom=$8 WHERE cod_prom=$1;',
+        [cod_prom, nombr_prom, descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin, imagen_prom,]
     )
     return response.command
 }
 
-async function deletePromotionById(cod_prom){
-    const res=await pool.query(
-        `delete from promocion where cod_prom=$1;`,
-        [cod_prom]
-    )
-    response.datos=res.rows;
-    return response;
+async function deletePromotionById(cod_prom) {
+    const res = await pool.query(`delete from promocion where cod_prom=$1;`, [cod_prom])
+    response.datos = res.rows
+    return response
 }
 
 async function deletePromotionsProductsById(cod_prom) {

@@ -33,7 +33,7 @@ async function createImage(cod_prod, imagen2) {
     return response.command
 }
 
-async function updateImage(cod_prod, num_pic, imagen) {
+async function updateImage(cod_prod, imagen) {
     const response = await pool.query(
         'UPDATE imagen  SET imagen=$3 where cod_prod = $1 and num_pic = $2;',
         [cod_prod, num_pic, imagen]
