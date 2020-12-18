@@ -2,7 +2,6 @@ const { response } = require('express')
 const pool = require('../../database')
 
 async function getDiscountClient(criterio, categoria, page, limit) {
-    console.log('entre al metodo con el criterio ' + criterio)
 
     var query = `SELECT * FROM producto p, descuento d
     where d.cod_prod=p.cod_prod and (cantidad>0) and(fecha_venc is null or fecha_venc>NOW())`
