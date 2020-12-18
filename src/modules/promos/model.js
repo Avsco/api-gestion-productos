@@ -40,29 +40,17 @@ async function deletePromotionsProductsById(cod_prom) {
 }
 
 async function getPromotionsClient(criterio, page, limit) {
+    var query = `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
+    FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())`
     if (criterio == '') {
-        const response = await pool.query(
-            `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-            FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-            ORDER BY cod_prom;`
-        )
+        const response = await pool.query(query + ` ORDER BY cod_prom;`)
         var result1 = response.rows
     } else {
         if (criterio == 'fecha_ini') {
-            const response = await pool.query(
-                `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                from promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-                order by fecha_ini desc`
-            )
+            const response = await pool.query(query + ` order by fecha_ini desc`)
             var result1 = response.rows
         } else {
-            const response = await pool.query(
-                `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                FROM promocion WHERE (cantidad_prom>'0')and(fecha_fin>NOW())
-                ORDER BY ` +
-                    criterio +
-                    `;`
-            )
+            const response = await pool.query(query + ` ORDER BY ` + criterio + `;`)
             var result1 = response.rows
         }
     }
@@ -95,29 +83,17 @@ async function getPromotionsClient(criterio, page, limit) {
 }
 
 async function getPromotions(criterio, page, limit) {
+    var query = `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
+    FROM promocion`
     if (criterio == '') {
-        const response = await pool.query(
-            `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-            FROM promocion 
-            ORDER BY cod_prom;`
-        )
+        const response = await pool.query(query + ` ORDER BY cod_prom;`)
         var result1 = response.rows
     } else {
         if (criterio == 'fecha_inic') {
-            const response = await pool.query(
-                `select cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                from promocion 
-                order by fecha_ini desc`
-            )
+            const response = await pool.query(query + ` order by fecha_ini desc`)
             var result1 = response.rows
         } else {
-            const response = await pool.query(
-                `SELECT cod_prom, nombr_prom,descrip_prom, cantidad_prom, precio_prom, fecha_ini, fecha_fin 
-                FROM promocion 
-                ORDER BY ` +
-                    criterio +
-                    `;`
-            )
+            const response = await pool.query(query + ` ORDER BY ` + criterio + `;`)
             var result1 = response.rows
         }
     }
