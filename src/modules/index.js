@@ -1,17 +1,11 @@
-const products = require('./products')
-const images = require('./Images')
-const promos = require('./promos')
-const discounts = require('./discounts')
-const search = require('./search')
-const categories = require('./categories')
+const postulant = require('./postulant')
+const production = require('./production')
+
 
 function router(app) {
-    app.use(images)
-    app.use(products)
-    app.use(promos)
-    app.use(discounts)
-    app.use(search)
-    app.use(categories)
+    app.use(postulant)
+    app.use(production)
+
 }
 
 module.exports = router
